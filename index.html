@@ -1,0 +1,4299 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Olafova hra – Bludiště & Plants vs Zombies</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;700&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(180deg, #87CEEB 0%, #98D982 40%, #7CB342 100%);
+      font-family: 'Nunito', sans-serif;
+      color: #2d5016;
+      padding: 20px;
+    }
+    .screen { display: none; flex-direction: column; align-items: center; }
+    .screen.active { display: flex; }
+    h1 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 2.2rem;
+      color: #1b5e20;
+      text-shadow: 2px 2px 0 #fff, 3px 3px 0 rgba(0,0,0,0.1);
+      margin-bottom: 8px;
+    }
+    .info { margin-bottom: 12px; font-size: 0.9rem; color: #33691e; }
+    .menu-title { font-size: 2.5rem; margin-bottom: 0; }
+    .menu-anim-wrap.anim-active .menu-title { animation: titleWiggle 3s ease-in-out infinite; }
+    @keyframes titleWiggle {
+      0%, 100% { transform: rotate(-1deg); }
+      50% { transform: rotate(1deg); }
+    }
+    .menu-anim-wrap { display: flex; flex-direction: column; align-items: center; margin-bottom: 24px; }
+    .menu-fun {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+    .fun-mascot { font-size: 4rem; }
+    .menu-anim-wrap.anim-active .fun-mascot { animation: mascotBounce 0.6s ease-in-out infinite; }
+    .fun-mascot.right { animation-delay: 0.3s; }
+    @keyframes mascotBounce {
+      0%, 100% { transform: scale(1) translateY(0) rotate(-5deg); }
+      50% { transform: scale(1.15) translateY(-12px) rotate(5deg); }
+    }
+    .fun-dance { font-size: 2.5rem; margin-top: 8px; }
+    .menu-anim-wrap.anim-active .fun-dance { animation: danceSpin 2s linear infinite; }
+    @keyframes danceSpin {
+      0% { transform: rotate(0deg) scale(1); }
+      25% { transform: rotate(10deg) scale(1.1); }
+      50% { transform: rotate(-10deg) scale(0.95); }
+      75% { transform: rotate(5deg) scale(1.05); }
+      100% { transform: rotate(0deg) scale(1); }
+    }
+    .fun-row2 { display: flex; gap: 20px; margin-top: 12px; font-size: 2.8rem; }
+    .fun-row2 span { display: inline-block; }
+    .menu-anim-wrap.anim-active .fun-shake { animation: funShake 0.5s ease-in-out infinite; }
+    @keyframes funShake {
+      0%, 100% { transform: translateX(0) rotate(0deg); }
+      25% { transform: translateX(-6px) rotate(-8deg); }
+      75% { transform: translateX(6px) rotate(8deg); }
+    }
+    .menu-anim-wrap.anim-active .fun-flip { animation: funFlip 1.2s ease-in-out infinite; }
+    @keyframes funFlip {
+      0%, 100% { transform: scaleX(1) rotate(0deg); }
+      50% { transform: scaleX(-1) rotate(180deg); }
+    }
+    .menu-anim-wrap.anim-active .fun-pulse { animation: funPulse 0.8s ease-in-out infinite; }
+    @keyframes funPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.4); }
+    }
+    .menu-anim-wrap.anim-active .fun-wobble { animation: funWobble 0.6s ease-in-out infinite; }
+    @keyframes funWobble {
+      0%, 100% { transform: rotate(-12deg); }
+      50% { transform: rotate(12deg); }
+    }
+    .menu-anim-wrap.anim-active .fun-bounce-h { animation: funBounceH 0.7s ease-in-out infinite; }
+    @keyframes funBounceH {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+    .menu-anim-wrap.anim-active .fun-roll { animation: funRoll 2s linear infinite; }
+    @keyframes funRoll {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .fun-row3 { display: flex; gap: 16px; margin-top: 10px; font-size: 2.2rem; flex-wrap: wrap; justify-content: center; }
+    .fun-row3 span { display: inline-block; }
+    .menu-anim-wrap.anim-active .fun-jump { animation: funJump 0.5s ease-in-out infinite; }
+    .fun-row3 .fun-jump:nth-child(2) { animation-delay: 0.1s; }
+    .fun-row3 .fun-jump:nth-child(3) { animation-delay: 0.2s; }
+    .fun-row3 .fun-jump:nth-child(4) { animation-delay: 0.3s; }
+    @keyframes funJump {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+    .menu-anim-wrap.anim-active .fun-sway { animation: funSway 1.5s ease-in-out infinite; }
+    @keyframes funSway {
+      0%, 100% { transform: translateX(-8px) rotate(-5deg); }
+      50% { transform: translateX(8px) rotate(5deg); }
+    }
+    .menu-anim-wrap.anim-active .fun-zoom { animation: funZoom 1s ease-in-out infinite; }
+    @keyframes funZoom {
+      0%, 100% { transform: scale(0.9); opacity: 0.9; }
+      50% { transform: scale(1.3); opacity: 1; }
+    }
+    .anim-btn {
+      padding: 6px 14px;
+      font-size: 0.85rem;
+      font-family: inherit;
+      background: linear-gradient(180deg, #FFEB3B 0%, #FBC02D 100%);
+      color: #1b5e20;
+      border: 2px solid #F9A825;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 700;
+      transition: transform 0.1s;
+    }
+    .anim-btn:hover { transform: scale(1.05); }
+    .menu-btns { display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; }
+    .menu-game-wrap { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .story-btn {
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      font-family: inherit;
+      background: rgba(255,235,59,0.4);
+      color: #33691e;
+      border: 1px solid #F9A825;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .story-btn:hover { background: rgba(255,235,59,0.7); }
+    .story-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.75);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 20px;
+    }
+    .story-overlay.show { display: flex; }
+    .story-box {
+      background: linear-gradient(180deg, #fff9c4 0%, #fff59d 100%);
+      border: 4px solid #F9A825;
+      border-radius: 16px;
+      padding: 24px 28px;
+      max-width: 420px;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+    }
+    .story-box h3 { margin-bottom: 12px; font-size: 1.3rem; color: #1b5e20; }
+    .story-box p { line-height: 1.6; color: #33691e; margin-bottom: 16px; }
+    .story-close { padding: 8px 20px; font-family: inherit; background: #558B2F; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; }
+    .story-close:hover { background: #689F38; }
+    .story-timer { font-size: 0.8rem; color: #666; margin-top: 10px; }
+    .story-box .story-hint { font-size: 0.8rem; color: #888; margin-top: 6px; }
+    .menu-btn {
+      padding: 24px 48px;
+      font-size: 1.3rem;
+      font-family: 'Fredoka One', cursive;
+      border: 4px solid #558B2F;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.2s;
+      min-width: 220px;
+    }
+    .menu-btn.maze {
+      background: linear-gradient(180deg, #415a77 0%, #1a1a2e 100%);
+      color: #ffd166;
+      border-color: #778da9;
+    }
+    .menu-btn.pvz {
+      background: linear-gradient(180deg, #8BC34A 0%, #558B2F 100%);
+      color: #fff;
+    }
+    .menu-btn.adventure {
+      background: linear-gradient(180deg, #2c1810 0%, #0d0221 100%);
+      color: #e8d5b7;
+      border-color: #4a3728;
+    }
+    .menu-btn.subway {
+      background: linear-gradient(180deg, #FF6B35 0%, #F7931E 100%);
+      color: #1a1a2e;
+      border-color: #E85D04;
+    }
+    .menu-btn.ninja {
+      background: linear-gradient(180deg, #ffeb3b 0%, #ff9800 100%);
+      color: #1a1a2e;
+      border-color: #f57c00;
+    }
+    .menu-btn.gd {
+      background: linear-gradient(180deg, #00bcd4 0%, #0097a7 100%);
+      color: #fff;
+      border-color: #00838f;
+    }
+    .menu-btn:hover { transform: scale(1.05); box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+    .back-btn {
+      margin-top: 12px;
+      padding: 8px 20px;
+      font-size: 0.95rem;
+      background: rgba(255,255,255,0.7);
+      border: 2px solid #558B2F;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: inherit;
+      color: #1b5e20;
+    }
+    .back-btn:hover { background: rgba(255,255,255,0.9); }
+    #mazeGame {
+      background: #0d1b2a;
+      border: 4px solid #415a77;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    #mazeGame .info { color: #eee; }
+    #mazeGame kbd { background: rgba(255,255,255,0.15); padding: 2px 8px; border-radius: 4px; }
+    #mazeCanvas { display: block; border-radius: 8px; image-rendering: pixelated; }
+    .maze-stats { margin-top: 12px; display: flex; gap: 24px; font-size: 1.1rem; color: #eee; }
+    .maze-stats span { color: #ffd166; font-weight: bold; }
+    .win-msg {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+      background: rgba(0,0,0,0.85); padding: 24px 40px; border-radius: 16px;
+      font-size: 1.5rem; text-align: center; border: 3px solid #ffd166;
+      display: none; z-index: 10;
+    }
+    .win-msg.show { display: block; animation: pop 0.3s ease; }
+    @keyframes pop {
+      from { transform: translate(-50%, -50%) scale(0.8); opacity: 0; }
+      to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    }
+    #game {
+      position: relative;
+      background: linear-gradient(180deg, #8BC34A 0%, #689F38 100%);
+      border: 5px solid #558B2F;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3), inset 0 2px 0 rgba(255,255,255,0.3);
+      overflow: hidden;
+    }
+    #pvzCanvas { display: block; background: transparent; }
+    .hud {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 12px; padding: 12px 20px;
+      background: rgba(255,255,255,0.6); border-radius: 12px;
+      font-size: 1.1rem; font-weight: 700; gap: 24px;
+    }
+    .sun-count { display: flex; align-items: center; gap: 6px; color: #F57F17; }
+    .sun-count::before { content: '☀️'; font-size: 1.4rem; }
+    .plant-bar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .plant-btn {
+      padding: 6px 12px; font-size: 0.8rem;
+      border: 3px solid #558B2F; border-radius: 10px;
+      background: linear-gradient(180deg, #C8E6C9 0%, #A5D6A7 100%);
+      cursor: pointer; font-family: inherit; font-weight: 700; color: #1b5e20;
+      transition: transform 0.1s, box-shadow 0.2s;
+    }
+    .plant-btn:hover:not(:disabled) { transform: scale(1.05); box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    .plant-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .plant-btn.selected { background: linear-gradient(180deg, #81C784 0%, #66BB6A 100%); box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); }
+    .overlay {
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.7); display: none;
+      align-items: center; justify-content: center; flex-direction: column;
+      z-index: 20; border-radius: 11px;
+    }
+    .overlay.show { display: flex; }
+    .overlay-msg { font-family: 'Fredoka One', cursive; font-size: 2rem; color: #fff; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); margin-bottom: 20px; text-align: center; }
+    .restart-btn {
+      padding: 14px 32px; font-size: 1.2rem; font-family: 'Fredoka One', cursive;
+      background: linear-gradient(180deg, #FFEB3B 0%, #FBC02D 100%);
+      color: #1b5e20; border: 3px solid #F9A825; border-radius: 12px;
+      cursor: pointer; transition: transform 0.1s; box-shadow: 0 4px 0 #F9A825;
+    }
+    .restart-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 0 #F9A825; }
+    #adventureGame {
+      background: #0d0221;
+      border: 4px solid #2c1810;
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+    #adventureGame .info { color: #c9b896; }
+    #adventureCanvas { display: block; border-radius: 8px; }
+    .adventure-hud {
+      display: flex; gap: 24px; margin-top: 10px;
+      font-size: 1.1rem; font-weight: 700; color: #e8d5b7;
+    }
+    .adventure-hud span { color: #ffd54f; }
+    #subwayGame {
+      background: #1a1a2e;
+      border: 4px solid #16213e;
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    #subwayGame .info { color: #eaeaea; }
+    #subwayCanvas { display: block; border-radius: 8px; }
+    .subway-hud { display: flex; gap: 24px; margin-top: 10px; font-size: 1.1rem; font-weight: 700; color: #eee; }
+    .subway-hud span { color: #F7931E; }
+    #ninjaGame {
+      background: linear-gradient(180deg, #1a237e 0%, #0d47a1 100%);
+      border: 4px solid #ff9800;
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+    #ninjaGame .info { color: #fff; }
+    #ninjaCanvas { display: block; border-radius: 8px; cursor: crosshair; }
+    .ninja-hud { display: flex; gap: 24px; margin-top: 10px; font-size: 1.1rem; font-weight: 700; color: #fff; }
+    .ninja-hud span { color: #ffeb3b; }
+    #gdGame {
+      background: linear-gradient(180deg, #0a0a0a 0%, #1a1a2a 100%);
+      border: 4px solid #00bcd4;
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    #gdGame .info { color: #b2ebf2; }
+    #gdCanvas { display: block; border-radius: 8px; cursor: pointer; }
+    .gd-hud { display: flex; gap: 24px; margin-top: 10px; font-size: 1.1rem; font-weight: 700; color: #b2ebf2; }
+    .gd-hud span { color: #00e5ff; }
+    .menu-btn.comic {
+      background: linear-gradient(180deg, #e040fb 0%, #aa00ff 50%, #7b1fa2 100%);
+      color: #fff;
+      border: 4px solid #fff;
+      border-color: #fff;
+      box-shadow: 0 0 0 3px #7b1fa2, 0 6px 20px rgba(156,39,176,0.6);
+      font-size: 1.35rem;
+      padding: 26px 52px;
+      min-width: 260px;
+      animation: comicGlow 2s ease-in-out infinite;
+    }
+    .menu-btn.comic:hover { box-shadow: 0 0 0 4px #fff, 0 0 20px #e040fb, 0 8px 28px rgba(0,0,0,0.35); }
+    @keyframes comicGlow {
+      0%, 100% { box-shadow: 0 0 0 3px #7b1fa2, 0 6px 20px rgba(156,39,176,0.6); }
+      50% { box-shadow: 0 0 0 4px #e040fb, 0 6px 24px rgba(224,64,251,0.8); }
+    }
+    .menu-game-wrap.comic-wrap-menu {
+      background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(255,235,255,0.95) 100%);
+      border: 3px solid #aa00ff;
+      border-radius: 20px;
+      padding: 14px 18px;
+      box-shadow: 0 4px 16px rgba(156,39,176,0.35);
+    }
+    #comicScreen h1 { font-size: 2.6rem; color: #4a148c; text-shadow: 2px 2px 0 #fff, 0 0 12px rgba(234,0,255,0.4); }
+    #comicScreen .comic-section {
+      background: linear-gradient(180deg, rgba(255,255,255,0.98) 0%, #fff8e1 100%);
+      border: 4px solid #f9a825;
+      border-radius: 20px;
+      padding: 24px;
+      margin: 20px 0;
+      max-width: 720px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    }
+    #comicScreen .comic-wrap { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; margin: 12px 0 20px; }
+    #comicScreen .comic-panel {
+      background: linear-gradient(180deg, #fffde7 0%, #fff9c4 100%);
+      border: 4px solid #f9a825;
+      border-radius: 14px;
+      padding: 18px;
+      width: 165px;
+      min-height: 150px;
+      text-align: center;
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1.4;
+      color: #5d4037;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+    }
+    #comicScreen .comic-panel .panel-emoji { font-size: 3rem; display: block; margin-bottom: 10px; }
+    #comicScreen .comic-play-row { margin: 20px 0 12px; }
+    #comicScreen #comicPlayBtn {
+      font-size: 1.35rem;
+      padding: 18px 36px;
+      border: 4px solid #fff;
+      box-shadow: 0 0 0 2px #7b1fa2, 0 6px 18px rgba(156,39,176,0.5);
+      animation: comicGlow 2s ease-in-out infinite;
+    }
+    #comicScreen #comicPlayBtn:hover { transform: scale(1.08); }
+    #comicScreen #comicGameWrap { display: none; margin-top: 20px; }
+    #comicScreen #comicGameWrap.show { display: block; }
+    #comicScreen #comicCanvas { display: block; border-radius: 12px; background: #1b5e20; border: 4px solid #2e7d32; margin: 0 auto; box-shadow: 0 6px 24px rgba(0,0,0,0.35); }
+    #comicScreen .comic-hud { margin-top: 12px; font-size: 1.25rem; font-weight: 700; color: #1b5e20; }
+    #comicScreen .comic-section.strudel-section { border-color: #d84315; background: linear-gradient(180deg, #fff3e0 0%, #ffe0b2 100%); }
+    #comicScreen #strudelGameWrap { display: none; margin-top: 20px; }
+    #comicScreen #strudelGameWrap.show { display: block; }
+    #comicScreen #strudelCanvas { display: block; border-radius: 12px; background: #4e342e; border: 4px solid #6d4c41; margin: 0 auto; box-shadow: 0 6px 24px rgba(0,0,0,0.35); }
+    #comicScreen .strudel-hud { margin-top: 10px; font-size: 1.2rem; font-weight: 700; color: #5d4037; }
+    #comicScreen #strudelTakeBtn { margin-top: 8px; padding: 12px 24px; font-size: 1.1rem; font-family: inherit; font-weight: 700; background: #d84315; color: #fff; border: 3px solid #bf360c; border-radius: 12px; cursor: pointer; }
+    #comicScreen #strudelTakeBtn:hover { background: #e64a19; }
+    .menu-btn.snake {
+      background: linear-gradient(180deg, #2e7d32 0%, #1b5e20 100%);
+      color: #fff;
+      border-color: #388e3c;
+    }
+    #snakeScreen #snakeGame { position: relative; display: inline-block; }
+    #snakeScreen .snake-hud { display: flex; gap: 20px; margin-top: 10px; font-size: 1.15rem; font-weight: 700; color: #1b5e20; }
+    #snakeScreen #snakeCanvas { display: block; border-radius: 10px; background: #1b5e20; border: 3px solid #388e3c; }
+    .menu-btn.bricks {
+      background: linear-gradient(180deg, #ff9800 0%, #e65100 100%);
+      color: #fff;
+      border-color: #f57c00;
+    }
+    #bricksScreen #bricksGame { position: relative; display: inline-block; }
+    #bricksScreen .bricks-hud { display: flex; gap: 20px; margin-top: 10px; font-size: 1.15rem; font-weight: 700; color: #e65100; }
+    #bricksScreen #bricksCanvas { display: block; border-radius: 10px; background: #1565c0; border: 3px solid #0d47a1; }
+    .menu-btn.ghost {
+      background: linear-gradient(180deg, #7b1fa2 0%, #4a148c 100%);
+      color: #fff;
+      border-color: #6a1b9a;
+    }
+    .menu-btn.pong {
+      background: linear-gradient(180deg, #00838f 0%, #006064 100%);
+      color: #fff;
+      border-color: #00695c;
+    }
+    .menu-btn.dodger {
+      background: linear-gradient(180deg, #455a64 0%, #263238 100%);
+      color: #e0e0e0;
+      border-color: #546e7a;
+    }
+    #ghostScreen #ghostGame, #pongScreen #pongGame, #dodgerScreen #dodgerGame { position: relative; display: inline-block; }
+    #ghostScreen .ghost-hud, #pongScreen .pong-hud, #dodgerScreen .dodger-hud { display: flex; gap: 20px; margin-top: 10px; font-size: 1.15rem; font-weight: 700; }
+    #ghostScreen .ghost-hud { color: #4a148c; }
+    #pongScreen .pong-hud { color: #006064; }
+    #dodgerScreen .dodger-hud { color: #37474f; }
+    .menu-btn.comic-only {
+      background: linear-gradient(180deg, #ff9800 0%, #e65100 50%, #bf360c 100%);
+      color: #fff;
+      border: 4px solid #fff;
+      box-shadow: 0 0 0 3px #e65100, 0 6px 20px rgba(230, 81, 0, 0.5);
+      font-size: 1.25rem;
+      padding: 22px 44px;
+      min-width: 220px;
+      animation: comicOnlyGlow 2.2s ease-in-out infinite;
+    }
+    .menu-btn.comic-only:hover { box-shadow: 0 0 0 4px #fff, 0 0 18px #ff9800, 0 8px 26px rgba(0,0,0,0.3); }
+    @keyframes comicOnlyGlow {
+      0%, 100% { box-shadow: 0 0 0 3px #e65100, 0 6px 20px rgba(230, 81, 0, 0.5); }
+      50% { box-shadow: 0 0 0 4px #ff9800, 0 6px 24px rgba(255, 152, 0, 0.7); }
+    }
+    .menu-game-wrap.comic-only-wrap-menu {
+      background: linear-gradient(135deg, rgba(255, 248, 225, 0.95) 0%, rgba(255, 236, 179, 0.95) 100%);
+      border: 3px solid #e65100;
+      border-radius: 18px;
+      padding: 12px 16px;
+      box-shadow: 0 4px 16px rgba(191, 54, 12, 0.35);
+    }
+    #comicOnlyScreen .comic-only-wrap { max-width: 640px; margin: 0 auto; }
+    #comicOnlyScreen #comicOnlyCanvas { display: block; margin: 0 auto; border-radius: 12px; border: 4px solid #4e342e; background: #fff8e1; }
+  </style>
+</head>
+<body>
+  <!-- MENU -->
+  <div id="menuScreen" class="screen active">
+    <div class="menu-anim-wrap" id="menuAnimWrap">
+      <div class="menu-fun">
+        <span class="fun-mascot">🥔</span>
+        <h1 class="menu-title">🎮 Olafova hra</h1>
+        <button type="button" class="anim-btn" id="animBtn" onclick="startAnim()">▶ Legrační animace</button>
+        <span class="fun-mascot right">🧀</span>
+      </div>
+      <div class="fun-dance" title="Tancuje!">💃 🕺</div>
+      <div class="fun-row2">
+        <span class="fun-shake">🤪</span>
+        <span class="fun-flip">🎉</span>
+        <span class="fun-pulse">🎊</span>
+        <span class="fun-wobble">🌈</span>
+        <span class="fun-bounce-h">🚀</span>
+        <span class="fun-roll">🍩</span>
+      </div>
+      <div class="fun-row3">
+        <span class="fun-jump">🐔</span>
+        <span class="fun-jump">🥳</span>
+        <span class="fun-sway">🦋</span>
+        <span class="fun-jump">⭐</span>
+        <span class="fun-zoom">💥</span>
+      </div>
+    </div>
+    <div class="menu-btns">
+      <div class="menu-game-wrap">
+        <button class="menu-btn maze" type="button" onclick="openGame('maze')">🏰 Bludiště</button>
+        <button type="button" class="story-btn" data-story="maze" onclick="showStory('maze'); event.stopPropagation();">📖 Příběh</button>
+      </div>
+      <div class="menu-game-wrap">
+        <button class="menu-btn pvz" type="button" onclick="openGame('pvz')">🌻 Plants vs Zombies</button>
+        <button type="button" class="story-btn" data-story="pvz" onclick="showStory('pvz'); event.stopPropagation();">📖 Příběh</button>
+      </div>
+      <div class="menu-game-wrap">
+        <button class="menu-btn adventure" type="button" onclick="openGame('adventure')">🌙 Dobrodružství v noci</button>
+        <button type="button" class="story-btn" data-story="adventure" onclick="showStory('adventure'); event.stopPropagation();">📖 Příběh</button>
+      </div>
+      <div class="menu-game-wrap">
+        <button class="menu-btn subway" type="button" onclick="openGame('subway')">🚃 Subway Surfers</button>
+        <button type="button" class="story-btn" data-story="subway" onclick="showStory('subway'); event.stopPropagation();">📖 Příběh</button>
+      </div>
+      <div class="menu-game-wrap">
+        <button class="menu-btn ninja" type="button" onclick="openGame('ninja')">🍉 Fruit Ninja</button>
+        <button type="button" class="story-btn" data-story="ninja" onclick="showStory('ninja'); event.stopPropagation();">📖 Příběh</button>
+      </div>
+      <div class="menu-game-wrap">
+        <button class="menu-btn gd" type="button" onclick="openGame('gd')">◆ Geometry Dash</button>
+        <button type="button" class="story-btn" data-story="gd" onclick="showStory('gd'); event.stopPropagation();">📖 Příběh</button>
+      </div>
+      <div class="menu-game-wrap comic-only-wrap-menu">
+        <button class="menu-btn comic-only" type="button" onclick="openGame('comicOnly')">Komiksy</button>
+      </div>
+      <div class="menu-game-wrap comic-wrap-menu">
+        <button class="menu-btn comic" type="button" onclick="openGame('comic')">📜 Komiks a hra</button>
+        <button type="button" class="story-btn" data-story="comic" onclick="showStory('comic'); event.stopPropagation();">📖 Příběh</button>
+      </div>
+      <div class="menu-game-wrap">
+        <button class="menu-btn snake" type="button" onclick="openGame('snake')">⚔️ Brawl Stars</button>
+        <button type="button" class="story-btn" data-story="snake" onclick="showStory('snake'); event.stopPropagation();">📖 Příběh</button>
+      </div>
+      <div class="menu-game-wrap">
+        <button class="menu-btn bricks" type="button" onclick="openGame('bricks')">🧱 Rozbíječ cihel</button>
+        <button type="button" class="story-btn" data-story="bricks" onclick="showStory('bricks'); event.stopPropagation();">📖 Příběh</button>
+      </div>
+      <div class="menu-game-wrap">
+        <button class="menu-btn ghost" type="button" onclick="openGame('ghost')">👻 Lovce duchů</button>
+        <button type="button" class="story-btn" data-story="ghost" onclick="showStory('ghost'); event.stopPropagation();">📖 Příběh</button>
+      </div>
+      <div class="menu-game-wrap">
+        <button class="menu-btn pong" type="button" onclick="openGame('pong')">🏓 Pong</button>
+        <button type="button" class="story-btn" data-story="pong" onclick="showStory('pong'); event.stopPropagation();">📖 Příběh</button>
+      </div>
+      <div class="menu-game-wrap">
+        <button class="menu-btn dodger" type="button" onclick="openGame('dodger')">💨 Vyhýbačka</button>
+        <button type="button" class="story-btn" data-story="dodger" onclick="showStory('dodger'); event.stopPropagation();">📖 Příběh</button>
+      </div>
+    </div>
+    <div class="story-overlay" id="storyOverlay">
+      <div class="story-box">
+        <h3 id="storyTitle">Příběh</h3>
+        <p id="storyText"></p>
+        <button type="button" class="story-close" id="storyClose" onclick="closeStory()">Zavřít</button>
+        <p class="story-timer" id="storyTimer">Zavře se za 10 s</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- BLUDIŠTĚ -->
+  <div id="mazeScreen" class="screen">
+    <h1>🏰 Bludiště</h1>
+    <p class="info">Pohyb: <kbd>W</kbd> <kbd>A</kbd> <kbd>S</kbd> <kbd>D</kbd> nebo šipky. Žluté = body, modré/fialové/zelené = bonusy.</p>
+    <div id="mazeGame" style="position:relative">
+      <canvas id="mazeCanvas" width="480" height="400"></canvas>
+      <div class="win-msg" id="mazeWinMsg">🎉 Level dokončen!</div>
+    </div>
+    <div class="maze-stats">
+      <p>Level: <span id="mazeLevel">1</span></p>
+      <p>Sbrané: <span id="mazeScore">0</span> / <span id="mazeTotal">0</span></p>
+      <p>Bonusy: <span id="mazeBonus">—</span></p>
+    </div>
+    <button class="back-btn" id="mazeBackBtn" type="button" onclick="backToMenu()">← Zpět do menu</button>
+  </div>
+
+  <!-- PLANTS VS ZOMBIES – Hudba: vlož soubor pvz-music.mp3 (nebo .ogg) do složky s index.html, aby hra hrála pozadí -->
+  <audio id="pvzMusic" loop preload="auto">
+    <source src="pvz-music.mp3" type="audio/mpeg">
+    <source src="pvz-music.ogg" type="audio/ogg">
+  </audio>
+  <div id="pvzScreen" class="screen">
+    <h1>🌻 Plants vs Zombies 🌿</h1>
+    <p class="info">Klikni na rostlinu v liště, pak na políčko v trávníku. Sbírej sluníčka!</p>
+    <div id="game">
+      <canvas id="pvzCanvas" width="900" height="500"></canvas>
+      <div class="overlay" id="gameOverOverlay">
+        <div class="overlay-msg">Zombie prošly! Prohrál jsi!</div>
+        <button class="restart-btn" id="restartBtn">Hrát znovu</button>
+      </div>
+      <div class="overlay" id="winOverlay">
+        <div class="overlay-msg">🎉 Vyhrál jsi! Všechny vlny přežity!</div>
+        <button class="restart-btn" id="winRestartBtn">Hrát znovu</button>
+      </div>
+    </div>
+    <div class="hud">
+      <div class="sun-count"><span id="sunCount">50</span></div>
+      <div class="plant-bar">
+        <button class="plant-btn" data-plant="sunflower" data-cost="50">🌻 Slunečnice (50)</button>
+        <button class="plant-btn" data-plant="peashooter" data-cost="100">🌱 Hrášek (100)</button>
+        <button class="plant-btn" data-plant="wallnut" data-cost="50">🥜 Ořech (50)</button>
+        <button class="plant-btn" data-plant="snowpea" data-cost="175">❄️ Sněžný hrášek (175)</button>
+        <button class="plant-btn" data-plant="repeater" data-cost="200">🌿 Opakovač (200)</button>
+        <button class="plant-btn" data-plant="cherrybomb" data-cost="150">🍒 Třešňová bomba (150)</button>
+      </div>
+      <span>Vlna: <span id="waveNum">1</span> / 5</span>
+    </div>
+    <button class="back-btn" id="pvzBackBtn" type="button" onclick="backToMenu()">← Zpět do menu</button>
+  </div>
+
+  <!-- DOBRODRUŽSTVÍ V NOCI -->
+  <div id="adventureScreen" class="screen">
+    <h1>🌙 Dobrodružství v noci</h1>
+    <p class="info">Šipky nebo A/D = běh, W nebo mezerník = skok. Pošlapej nestvůry shora. Sběr hvězd = score. 3 životy.</p>
+    <div id="adventureGame">
+      <canvas id="adventureCanvas" width="800" height="450"></canvas>
+    </div>
+    <div class="adventure-hud">
+      <p>Životy: <span id="adventureLives">3</span></p>
+      <p>Score: <span id="adventureScore">0</span></p>
+    </div>
+    <button class="back-btn" id="adventureBackBtn" type="button" onclick="backToMenu()">← Zpět do menu</button>
+  </div>
+
+  <!-- SUBWAY SURFERS -->
+  <div id="subwayScreen" class="screen">
+    <h1>🚃 Subway Surfers</h1>
+    <p class="info">Šipky nebo A/D = přepnutí koleje. Šipka nahoru nebo W = skok. Šipka dolů nebo S = skok pod překážku. Sbírej mince a bonusy, nenech se chytit poldou!</p>
+    <div id="subwayGame">
+      <canvas id="subwayCanvas" width="500" height="500"></canvas>
+    </div>
+    <div class="subway-hud">
+      <p>Score: <span id="subwayScore">0</span></p>
+      <p>Mince: <span id="subwayCoins">0</span></p>
+      <p>Polda: <span id="subwayCopMeter">●●●○○</span></p>
+      <p>Rekord dnes – score: <span id="subwayBestScore">0</span></p>
+      <p>Rekord dnes – dálka: <span id="subwayBestDist">0</span></p>
+      <p>Rekord dnes – mince: <span id="subwayBestCoins">0</span></p>
+    </div>
+    <button class="back-btn" id="subwayBackBtn" type="button" onclick="backToMenu()">← Zpět do menu</button>
+  </div>
+
+  <!-- FRUIT NINJA -->
+  <div id="ninjaScreen" class="screen">
+    <h1>🍉 Fruit Ninja</h1>
+    <p class="info">Táhni myší nebo prstem přes ovoce a krájej! Sbírej body. Nepřeřízni bombu 💣!</p>
+    <div id="ninjaGame">
+      <canvas id="ninjaCanvas" width="500" height="500"></canvas>
+    </div>
+    <div class="ninja-hud">
+      <p>Score: <span id="ninjaScore">0</span></p>
+      <p>Životy: <span id="ninjaLives">3</span></p>
+    </div>
+    <button class="back-btn" id="ninjaBackBtn" type="button" onclick="backToMenu()">← Zpět do menu</button>
+  </div>
+
+  <!-- KOMIKS A HRA -->
+  <div id="comicScreen" class="screen">
+    <h1>📜 Komiks a hra</h1>
+    <div class="comic-section">
+      <p style="text-align:center; font-weight:700; font-size:1.1rem; color:#5d4037; margin-bottom:8px;">Olaf a jablka – přečti komiks a pak hraj!</p>
+      <div class="comic-wrap" id="comicPanels">
+        <div class="comic-panel"><span class="panel-emoji">🧑‍🌾</span>Olaf se rozhodl: „Dnes nasbírám jablka!“ Vzal košík a vykročil do zahrady.</div>
+        <div class="comic-panel"><span class="panel-emoji">🌳</span>Strom byl plný jablek. „Stačí chytit deset,“ řekl si. „To zvládnu!“</div>
+        <div class="comic-panel"><span class="panel-emoji">🍎</span>Jablka začala padat. Olaf máhnul košíkem. První jablko – chytačka!</div>
+        <div class="comic-panel"><span class="panel-emoji">🧺</span>Teď jsi na řadě ty. Chytej padající jablka do košíku. Deset = výhra!</div>
+      </div>
+      <div class="comic-play-row">
+        <button type="button" class="menu-btn comic" id="comicPlayBtn" onclick="startComicGame()">▶ Hrát minihru – Chyť jablka!</button>
+      </div>
+    </div>
+    <div id="comicGameWrap" class="comic-game">
+      <p class="info" style="margin-bottom:6px;">Šipky vlevo/vpravo nebo A / D = pohyb košíkem. Chytej jablka!</p>
+      <canvas id="comicCanvas" width="400" height="400"></canvas>
+      <div class="comic-hud">Chycená jablka: <span id="comicCaught">0</span> / 10</div>
+    </div>
+
+    <div class="comic-section strudel-section" style="margin-top:32px;">
+      <p style="text-align:center; font-weight:700; font-size:1.1rem; color:#5d4037; margin-bottom:8px;">🍎 Olaf peče štrůdl – přečti komiks a pak hraj!</p>
+      <div class="comic-wrap" id="strudelPanels">
+        <div class="comic-panel"><span class="panel-emoji">👨‍🍳</span>Olaf si řekl: „Upeču štrůdl!“ Rozválel těsto a připravil jablka s skořicí.</div>
+        <div class="comic-panel"><span class="panel-emoji">🥧</span>Zabalil štrůdl a strčil ho do trouby. „Teď musím vyndat ve správný okamžik!“</div>
+        <div class="comic-panel"><span class="panel-emoji">🌡️</span>Teploměr v troubě stoupá a klesá. Když je jehla v zelené zóně – štrůdl je hotový!</div>
+        <div class="comic-panel"><span class="panel-emoji">✅</span>Teď jsi na řadě ty. Vyndej tři štrůdly ve správný moment. MEZERNÍK nebo tlačítko Vyndat!</div>
+      </div>
+      <div class="comic-play-row">
+        <button type="button" class="menu-btn comic" id="strudelPlayBtn" onclick="startStrudelGame()">▶ Hrát minihru – Vyndej štrůdl!</button>
+      </div>
+    </div>
+    <div id="strudelGameWrap" class="comic-game">
+      <p class="info" style="margin-bottom:6px;">Jehla teploměru se hýbe. Stiskni <kbd>MEZERNÍK</kbd> nebo klikni „Vyndat“, když je jehla v zelené zóně!</p>
+      <canvas id="strudelCanvas" width="400" height="280"></canvas>
+      <button type="button" id="strudelTakeBtn" onclick="strudelTakeOut()">🥧 Vyndat štrůdl!</button>
+      <div class="strudel-hud">Upečené štrůdly: <span id="strudelCount">0</span> / 3</div>
+    </div>
+
+    <button class="back-btn" id="comicBackBtn" type="button" onclick="backToMenu()">← Zpět do menu</button>
+  </div>
+
+  <!-- BRAWL STARS -->
+  <div id="snakeScreen" class="screen">
+    <h1>⚔️ Brawl Stars</h1>
+    <p class="info"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> nebo šipky = pohyb. Myší míříš, <kbd>MEZERNÍK</kbd> nebo klik = střelba. Poraz nepřátele a sbírej hvězdy!</p>
+    <div id="snakeGame">
+      <canvas id="snakeCanvas" width="500" height="450"></canvas>
+      <div class="snake-overlay overlay" id="snakeOverlay">
+        <div class="overlay-msg">Konec! Score: <span id="snakeFinalLen">0</span></div>
+        <button class="restart-btn" id="snakeRestartBtn">Hrát znovu</button>
+      </div>
+    </div>
+    <div class="snake-hud">
+      <p>Score: <span id="snakeScore">0</span></p>
+      <p>Životy: <span id="snakeLen">100</span></p>
+      <p>Rekord dnes: <span id="brawlBestScore">0</span></p>
+    </div>
+    <button class="back-btn" id="snakeBackBtn" type="button" onclick="backToMenu()">← Zpět do menu</button>
+  </div>
+
+  <!-- KOMIKSY (3 kreslené komiksy) -->
+  <div id="comicOnlyScreen" class="screen">
+    <h1>Komiksy</h1>
+    <p class="info">Vyber komiks – příběh v obrázcích, nakresleno.</p>
+    <p style="margin-bottom:12px; display:flex; flex-wrap:wrap; gap:10px; justify-content:center;">
+      <button type="button" class="anim-btn" onclick="showComicOnly(1)">1. Kocour a prázdná lednice</button>
+      <button type="button" class="anim-btn" onclick="showComicOnly(2)">2. Olaf a pizzový den</button>
+      <button type="button" class="anim-btn" onclick="showComicOnly(3)">3. Veverka a oříšek</button>
+    </p>
+    <div class="comic-only-wrap">
+      <canvas id="comicOnlyCanvas" width="640" height="480"></canvas>
+    </div>
+    <button class="back-btn" id="comicOnlyBackBtn" type="button" onclick="backToMenu()">← Zpět do menu</button>
+  </div>
+
+  <!-- ROZBÍJEČ CIHEL -->
+  <div id="bricksScreen" class="screen">
+    <h1>🧱 Rozbíječ cihel</h1>
+    <p class="info">Pohyb myší nebo <kbd>A</kbd><kbd>D</kbd> = pádlo. Rozbij všechny cihly míčkem. 3 životy!</p>
+    <div id="bricksGame">
+      <canvas id="bricksCanvas" width="480" height="400"></canvas>
+      <div class="overlay" id="bricksOverlay">
+        <div class="overlay-msg" id="bricksOverlayMsg">Konec!</div>
+        <button class="restart-btn" id="bricksRestartBtn">Hrát znovu</button>
+      </div>
+    </div>
+    <div class="bricks-hud">
+      <p>Score: <span id="bricksScore">0</span></p>
+      <p>Životy: <span id="bricksLives">3</span></p>
+    </div>
+    <button class="back-btn" id="bricksBackBtn" type="button" onclick="backToMenu()">← Zpět do menu</button>
+  </div>
+
+  <!-- LOVCE DECHŮ -->
+  <div id="ghostScreen" class="screen">
+    <h1>👻 Lovce duchů</h1>
+    <p class="info"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> nebo šipky = pohyb. <kbd>MEZERNÍK</kbd> nebo klik na ducha = chytit. Chyť 15 duchů!</p>
+    <div id="ghostGame">
+      <canvas id="ghostCanvas" width="480" height="400"></canvas>
+      <div class="overlay" id="ghostOverlay">
+        <div class="overlay-msg" id="ghostOverlayMsg">Konec!</div>
+        <button class="restart-btn" id="ghostRestartBtn">Hrát znovu</button>
+      </div>
+    </div>
+    <div class="ghost-hud">
+      <p>Chycení duchové: <span id="ghostScore">0</span> / 15</p>
+    </div>
+    <button class="back-btn" id="ghostBackBtn" type="button" onclick="backToMenu()">← Zpět do menu</button>
+  </div>
+
+  <!-- PONG -->
+  <div id="pongScreen" class="screen">
+    <h1>🏓 Pong</h1>
+    <p class="info">Levý hráč: <kbd>W</kbd><kbd>S</kbd>. Pravý hráč (nebo robot): <kbd>↑</kbd><kbd>↓</kbd>. První na 5 bodů vyhrává!</p>
+    <p style="margin-bottom:8px;">
+      <button type="button" class="anim-btn" id="pongBtnRobot" onclick="pongSetMode(false)">Vs robot</button>
+      <button type="button" class="anim-btn" id="pongBtnHuman" onclick="pongSetMode(true)">2 hráči</button>
+    </p>
+    <div id="pongGame">
+      <canvas id="pongCanvas" width="500" height="380"></canvas>
+      <div class="overlay" id="pongOverlay">
+        <div class="overlay-msg" id="pongOverlayMsg">Konec!</div>
+        <button class="restart-btn" id="pongRestartBtn">Hrát znovu</button>
+      </div>
+    </div>
+    <div class="pong-hud">
+      <p>Levý (<kbd>W</kbd><kbd>S</kbd>): <span id="pongPlayerScore">0</span> — <span id="pongRightLabel">Počítač</span> (<kbd>↑</kbd><kbd>↓</kbd>): <span id="pongAiScore">0</span></p>
+    </div>
+    <button class="back-btn" id="pongBackBtn" type="button" onclick="backToMenu()">← Zpět do menu</button>
+  </div>
+
+  <!-- VYHÝBAČKA -->
+  <div id="dodgerScreen" class="screen">
+    <h1>💨 Vyhýbačka</h1>
+    <p class="info"><kbd>A</kbd><kbd>D</kbd> nebo šipky vlevo/vpravo = pohyb. Vyhni padajícím předmětům co nejdéle!</p>
+    <div id="dodgerGame">
+      <canvas id="dodgerCanvas" width="400" height="450"></canvas>
+      <div class="overlay" id="dodgerOverlay">
+        <div class="overlay-msg" id="dodgerOverlayMsg">Konec! Score: 0</div>
+        <button class="restart-btn" id="dodgerRestartBtn">Hrát znovu</button>
+      </div>
+    </div>
+    <div class="dodger-hud">
+      <p>Score: <span id="dodgerScore">0</span> s</p>
+    </div>
+    <button class="back-btn" id="dodgerBackBtn" type="button" onclick="backToMenu()">← Zpět do menu</button>
+  </div>
+
+  <!-- GEOMETRY DASH -->
+  <div id="gdScreen" class="screen">
+    <h1>◆ Geometry Dash</h1>
+    <p class="info">Klikni nebo mezerník = skok. Kvádřík běží sám – nepřejet o trny a bloky!</p>
+    <div id="gdGame">
+      <canvas id="gdCanvas" width="600" height="400"></canvas>
+    </div>
+    <div class="gd-hud">
+      <p>Score: <span id="gdScore">0</span></p>
+      <p>Rekord dnes: <span id="gdBestScore">0</span></p>
+    </div>
+    <button class="back-btn" id="gdBackBtn" type="button" onclick="backToMenu()">← Zpět do menu</button>
+  </div>
+
+  <script>
+    (function() {
+      var ctx = null;
+      function getCtx() {
+        if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+        return ctx;
+      }
+      function beep(freq, duration, type, vol) {
+        try {
+          var c = getCtx();
+          if (c.state === 'suspended') c.resume();
+          var o = c.createOscillator();
+          var g = c.createGain();
+          o.connect(g);
+          g.connect(c.destination);
+          o.frequency.value = freq;
+          o.type = type || 'sine';
+          var v = vol != null ? vol : 0.12;
+          g.gain.setValueAtTime(v, c.currentTime);
+          g.gain.exponentialRampToValueAtTime(0.001, c.currentTime + duration);
+          o.start(c.currentTime);
+          o.stop(c.currentTime + duration);
+        } catch (e) {}
+      }
+      window.Sound = {
+        collect: function() { beep(880, 0.07, 'square'); },
+        hit: function() { beep(100, 0.12, 'sawtooth', 0.15); },
+        jump: function() { beep(350, 0.04, 'sine'); beep(520, 0.05, 'sine'); },
+        slide: function() { beep(180, 0.06, 'sawtooth'); },
+        shoot: function() { beep(550, 0.05, 'square'); },
+        explosion: function() { beep(80, 0.15, 'sawtooth', 0.2); beep(50, 0.2, 'square', 0.15); },
+        gameOver: function() { beep(220, 0.15, 'sine'); beep(165, 0.2, 'sine'); beep(110, 0.25, 'sine'); },
+        win: function() { beep(523, 0.1, 'sine'); beep(659, 0.1, 'sine'); beep(784, 0.12, 'sine'); },
+        bonus: function() { beep(660, 0.06, 'square'); beep(880, 0.06, 'square'); },
+        place: function() { beep(400, 0.06, 'sine'); }
+      };
+    })();
+
+    function openGame(id) {
+      var screens = document.querySelectorAll('.screen');
+      for (var i = 0; i < screens.length; i++) screens[i].classList.remove('active');
+      var el = document.getElementById(id + 'Screen');
+      if (el) el.classList.add('active');
+      var names = { maze: 'Maze', pvz: 'Pvz', adventure: 'Adventure', subway: 'Subway', ninja: 'Ninja', gd: 'GD', comic: 'Comic', comicOnly: 'ComicOnly', snake: 'Snake', bricks: 'Bricks', ghost: 'Ghost', pong: 'Pong', dodger: 'Dodger' };
+      var fn = window['init' + (names[id] || id)];
+      if (typeof fn === 'function') fn();
+    }
+    function backToMenu() {
+      var pvzAud = document.getElementById('pvzMusic');
+      if (pvzAud) { pvzAud.pause(); pvzAud.currentTime = 0; }
+      var screens = document.querySelectorAll('.screen');
+      for (var i = 0; i < screens.length; i++) screens[i].classList.remove('active');
+      var menu = document.getElementById('menuScreen');
+      if (menu) menu.classList.add('active');
+    }
+    function startAnim() {
+      var el = document.getElementById('menuAnimWrap');
+      if (el) { el.classList.add('anim-active'); }
+      var btn = document.getElementById('animBtn');
+      if (btn) btn.textContent = '⏸ Běží…';
+      setTimeout(function() {
+        if (el) el.classList.remove('anim-active');
+        if (btn) btn.textContent = '▶ Legrační animace';
+      }, 6000);
+    }
+
+    function initGameHandlers() {
+      // === MENU NAVIGATION (delegace – klik na jakékoli tlačítko hry) ===
+      document.getElementById('menuScreen').addEventListener('click', (e) => {
+        const btn = e.target.closest('.menu-btn.maze, .menu-btn.pvz, .menu-btn.adventure, .menu-btn.subway, .menu-btn.ninja, .menu-btn.gd, .menu-btn.comic, .menu-btn.snake, .menu-btn.bricks, .menu-btn.ghost, .menu-btn.pong, .menu-btn.dodger');
+        if (!btn) return;
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        if (btn.classList.contains('maze')) {
+          document.getElementById('mazeScreen').classList.add('active');
+          if (typeof initMaze === 'function') initMaze();
+        } else if (btn.classList.contains('pvz')) {
+          document.getElementById('pvzScreen').classList.add('active');
+          if (typeof initPvz === 'function') initPvz();
+        } else if (btn.classList.contains('adventure')) {
+          document.getElementById('adventureScreen').classList.add('active');
+          if (typeof initAdventure === 'function') initAdventure();
+        } else if (btn.classList.contains('subway')) {
+          document.getElementById('subwayScreen').classList.add('active');
+          if (typeof initSubway === 'function') initSubway();
+        } else if (btn.classList.contains('ninja')) {
+          document.getElementById('ninjaScreen').classList.add('active');
+          if (typeof initNinja === 'function') initNinja();
+        } else if (btn.classList.contains('gd')) {
+          document.getElementById('gdScreen').classList.add('active');
+          if (typeof initGD === 'function') initGD();
+        } else if (btn.classList.contains('comic')) {
+          document.getElementById('comicScreen').classList.add('active');
+          if (typeof initComic === 'function') initComic();
+        } else if (btn.classList.contains('snake')) {
+          document.getElementById('snakeScreen').classList.add('active');
+          if (typeof initSnake === 'function') initSnake();
+        } else if (btn.classList.contains('bricks')) {
+          document.getElementById('bricksScreen').classList.add('active');
+          if (typeof initBricks === 'function') initBricks();
+        } else if (btn.classList.contains('comic-only')) {
+          document.getElementById('comicOnlyScreen').classList.add('active');
+          if (typeof initComicOnly === 'function') initComicOnly();
+        } else if (btn.classList.contains('ghost')) {
+          document.getElementById('ghostScreen').classList.add('active');
+          if (typeof initGhost === 'function') initGhost();
+        } else if (btn.classList.contains('pong')) {
+          document.getElementById('pongScreen').classList.add('active');
+          if (typeof initPong === 'function') initPong();
+        } else if (btn.classList.contains('dodger')) {
+          document.getElementById('dodgerScreen').classList.add('active');
+          if (typeof initDodger === 'function') initDodger();
+        }
+      });
+
+      document.getElementById('mazeBackBtn').addEventListener('click', () => {
+        document.getElementById('mazeScreen').classList.remove('active');
+        document.getElementById('menuScreen').classList.add('active');
+      });
+      document.getElementById('pvzBackBtn').addEventListener('click', () => {
+        document.getElementById('pvzScreen').classList.remove('active');
+        document.getElementById('menuScreen').classList.add('active');
+      });
+      document.getElementById('adventureBackBtn').addEventListener('click', () => {
+        document.getElementById('adventureScreen').classList.remove('active');
+        document.getElementById('menuScreen').classList.add('active');
+      });
+      document.getElementById('subwayBackBtn').addEventListener('click', () => {
+        document.getElementById('subwayScreen').classList.remove('active');
+        document.getElementById('menuScreen').classList.add('active');
+      });
+      document.getElementById('ninjaBackBtn').addEventListener('click', () => {
+        document.getElementById('ninjaScreen').classList.remove('active');
+        document.getElementById('menuScreen').classList.add('active');
+      });
+      document.getElementById('gdBackBtn').addEventListener('click', () => {
+        document.getElementById('gdScreen').classList.remove('active');
+        document.getElementById('menuScreen').classList.add('active');
+      });
+      document.getElementById('comicBackBtn').addEventListener('click', () => {
+        document.getElementById('comicScreen').classList.remove('active');
+        document.getElementById('menuScreen').classList.add('active');
+      });
+      document.getElementById('bricksBackBtn').addEventListener('click', () => {
+        document.getElementById('bricksScreen').classList.remove('active');
+        document.getElementById('menuScreen').classList.add('active');
+      });
+      document.getElementById('comicOnlyBackBtn').addEventListener('click', () => {
+        document.getElementById('comicOnlyScreen').classList.remove('active');
+        document.getElementById('menuScreen').classList.add('active');
+      });
+      document.getElementById('ghostBackBtn').addEventListener('click', () => {
+        document.getElementById('ghostScreen').classList.remove('active');
+        document.getElementById('menuScreen').classList.add('active');
+      });
+      document.getElementById('pongBackBtn').addEventListener('click', () => {
+        document.getElementById('pongScreen').classList.remove('active');
+        document.getElementById('menuScreen').classList.add('active');
+      });
+      document.getElementById('dodgerBackBtn').addEventListener('click', () => {
+        document.getElementById('dodgerScreen').classList.remove('active');
+        document.getElementById('menuScreen').classList.add('active');
+      });
+      document.getElementById('animBtn').addEventListener('click', () => {
+      const el = document.getElementById('menuAnimWrap');
+      el.classList.add('anim-active');
+      document.getElementById('animBtn').textContent = '⏸ Běží…';
+      setTimeout(() => {
+        el.classList.remove('anim-active');
+        document.getElementById('animBtn').textContent = '▶ Legrační animace';
+      }, 6000);
+    });
+    }
+
+    (function runWhenReady() {
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', runWhenReady);
+        return;
+      }
+      initGameHandlers();
+    })();
+
+    const STORIES = {
+      maze: {
+        title: '🏰 Příběh: Bludiště',
+        text: 'Jednou se ztratil hladový sýr v obřím bludišti z chleba. Potkal bramboru a řekl: „Kámo, já sbírám žluté kuličky, abych měl sílu najít cestu ven.“ Brambora odpověděla: „Já zase modré – pak můžu projít zdí!“ Společně doběhli k východu a od té doby si dávají tři bonusy k večeři.'
+      },
+      pvz: {
+        title: '🌻 Příběh: Plants vs Zombies',
+        text: 'Zombie s kuželem na hlavě přišel na trávník a povídá: „Hele, mám kužel, jsem třída.“ Slunečnice se na něj podívala a řekla: „My tu pěstujeme sluníčka. Ty jsi jen salát s nohama.“ Hrášek ho pak odstřelil a slunečnice dodala: „Třída? Spíš tříšť. Na smetaně.“'
+      },
+      adventure: {
+        title: '🌙 Příběh: Dobrodružství v noci',
+        text: 'V noci vylezl hrdina ven a potkal nestvůru. „Já tě sežeru!“ řekla. On skočil na hlavu a nestvůra zmizela. Druhá řekla: „Já tě —“ Šplouch. Třetí: „Já t—“ Šplouch. Na konci noci měl tři životy a plno hvězd. Nestvůry měly nula. „Příště jdu dřív spát,“ řekly.'
+      },
+      subway: {
+        title: '🚃 Příběh: Subway Surfers',
+        text: 'Klučina běžel po kolejích a sbíral mince. Vlak za ním: „BÉÉÉ!“ On: „Nemám čas, mám mince!“ Přeskočil bednu. Podlezl tyč. Strážník křičel: „Stůj!“ On: „Nemůžu, mám mince!“ A tak běží dodnes. Říká se, že v noci ho ještě slyší šustit mincemi.'
+      },
+      ninja: {
+        title: '🍉 Příběh: Fruit Ninja',
+        text: 'Jednou se meloun probudil a řekl: „Já chci být ninja!“ Banán se smál: „Ty? Jsi kulatý!“ Meloun vytáhl meč a šmik – banán byl na dvě půlky. „Teď jsem Fruit Ninja,“ řekl meloun. Jablko a pomeranč utekly do lednice. Od té doby meloun krájí jen ovoce, co létá. A občas bombu. To nedopadne dobře.'
+      },
+      gd: {
+        title: '◆ Příběh: Geometry Dash',
+        text: 'Malý čtvereček se jednou probudil a řekl: „Já chci běžet!“ A běžel. A běžel. Narazil na trn. „Au!“ Znovu. „Au!“ Znovu. „Proč pořád trny?“ zařval. Kruh vedle řekl: „Protože je to Geometry Dash, kámo. Běž dál.“ Čtvereček běží dodnes. Občas přežije víc než tři sekundy.'
+      },
+      comic: {
+        title: '📜 Příběh: Komiks a hra',
+        text: 'Olaf jednou řekl: „Proč jen číst komiksy, když můžu být v jedné?“ A tak vstoupil do vlastního komiksu o jablkách. Na konci komiksu na tebe čeká minihra – chytání jablek do košíku. Kdo chytí deset, vyhrál. Olaf drží palce!'
+      },
+      snake: {
+        title: '⚔️ Příběh: Brawl Stars',
+        text: 'Brawler Shelby se probudil v aréně. „Kde jsou hvězdy?“ vykřikl a vyrazil. Snědl jednu – narostl. Dvě – ještě víc. „Jsem největší brawler!“ zakřičel a narazil do zdi. Od té doby v Brawl Stars jezdí opatrně a sbírají hvězdy.'
+      },
+      bricks: {
+        title: '🧱 Příběh: Rozbíječ cihel',
+        text: 'Cihla se jednou probudila a řekla: „Nechci být rozbitá!“ Míček odpověděl: „To je můj job.“ A hop – cihla byla na kusy. Ostatní cihly plakaly. Pádlo dole jen mávlo: „Příště se schovejte.“ A tak vznikl Rozbíječ cihel.'
+      },
+      ghost: {
+        title: '👻 Příběh: Lovce duchů',
+        text: 'Duch Běloušek létal po půdě a křičel: „Búúú!“ Lovkyně Ema vytáhla vysavač: „U nás se nestraší.“ Běloušek se zasmál a zmizel. Ema ho našla za skříní a bác – chycen. Od té doby loví duchy a počítá: patnáct a jde se spát.'
+      },
+      pong: {
+        title: '🏓 Příběh: Pong',
+        text: 'Dvě pádla se nemohla dohodnout, kdo je lepší. Míček řekl: „Tak mě odrážejte a uvidíme.“ Odraz, odraz, odraz. Pádla se unavila. Míček vyhrál. Od té doby hrají Pong – první na pět bodů vyhrává. Míček pořád jen běhá.'
+      },
+      dodger: {
+        title: '💨 Příběh: Vyhýbačka',
+        text: 'Kdosi začal házet z nebe melouny. „Proč?“ křičel chodec. „Protože je to Vyhýbačka!“ odpověděl hlas. Chodec uhýbal. Jedna minuta, dvě, tři. „Už mě bolí nohy.“ Melouny padaly dál. A tak se hraje dodnes – kdo vydrží nejdéle, vyhrál.'
+      }
+    };
+    function stopStorySpeech() {
+      try { if (window.speechSynthesis) window.speechSynthesis.cancel(); } catch (e) {}
+    }
+    function readStoryAloud(title, text) {
+      try {
+        if (!window.speechSynthesis) return;
+        stopStorySpeech();
+        var u = new SpeechSynthesisUtterance((title || '') + (title && text ? '. ' : '') + (text || ''));
+        u.lang = 'cs-CZ';
+        u.rate = 0.95;
+        window.speechSynthesis.speak(u);
+      } catch (e) {}
+    }
+    window.showStory = function(key) {
+      var s = STORIES[key];
+      if (!s) return;
+      document.getElementById('storyTitle').textContent = s.title;
+      document.getElementById('storyText').textContent = s.text;
+      document.getElementById('storyOverlay').classList.add('show');
+      readStoryAloud(s.title, s.text);
+      if (window._storyTimerId) clearInterval(window._storyTimerId);
+      var sec = 20;
+      document.getElementById('storyTimer').textContent = 'Zavře se za ' + sec + ' s';
+      window._storyTimerId = setInterval(function() {
+        sec--;
+        document.getElementById('storyTimer').textContent = sec > 0 ? 'Zavře se za ' + sec + ' s' : 'Zavírání…';
+        if (sec <= 0) {
+          clearInterval(window._storyTimerId);
+          window._storyTimerId = null;
+          stopStorySpeech();
+          document.getElementById('storyOverlay').classList.remove('show');
+        }
+      }, 1000);
+    };
+    window.closeStory = function() {
+      stopStorySpeech();
+      document.getElementById('storyOverlay').classList.remove('show');
+      if (window._storyTimerId) { clearInterval(window._storyTimerId); window._storyTimerId = null; }
+    };
+    let storyTimerId = null;
+    document.querySelectorAll('.story-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const key = btn.dataset.story;
+        const s = STORIES[key];
+        if (!s) return;
+        document.getElementById('storyTitle').textContent = s.title;
+        document.getElementById('storyText').textContent = s.text;
+        document.getElementById('storyOverlay').classList.add('show');
+        readStoryAloud(s.title, s.text);
+        if (storyTimerId) clearInterval(storyTimerId);
+        let sec = 20;
+        document.getElementById('storyTimer').textContent = 'Zavře se za ' + sec + ' s';
+        storyTimerId = setInterval(() => {
+          sec--;
+          document.getElementById('storyTimer').textContent = sec > 0 ? 'Zavře se za ' + sec + ' s' : 'Zavírání…';
+          if (sec <= 0) {
+            clearInterval(storyTimerId);
+            storyTimerId = null;
+            stopStorySpeech();
+            document.getElementById('storyOverlay').classList.remove('show');
+          }
+        }, 1000);
+      });
+    });
+    document.getElementById('storyClose').addEventListener('click', () => {
+      window.closeStory();
+      if (storyTimerId) { clearInterval(storyTimerId); storyTimerId = null; }
+    });
+
+    // === BLUDIŠTĚ ===
+    const mazeCanvas = document.getElementById('mazeCanvas');
+    const mazeCtx = mazeCanvas.getContext('2d');
+    const TILE = 24;
+    const MAZE_COLS = Math.floor(480 / TILE);
+    const MAZE_ROWS = Math.floor(400 / TILE);
+    let grid = [], mazePlayer = { x: 1, y: 1 };
+    let mazeItems = [], mazeTotalItems = 0, mazeCollected = 0, mazeLevel = 1;
+    let bonusSpeed = 0, bonusJump = 0, bonusGhost = 0;
+    const BONUS_TYPES = ['speed', 'jump', 'ghost'];
+
+    function carve(r, c) {
+      const dirs = [[0, -2], [0, 2], [-2, 0], [2, 0]];
+      for (let i = dirs.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [dirs[i], dirs[j]] = [dirs[j], dirs[i]];
+      }
+      for (const [dr, dc] of dirs) {
+        const nr = r + dr, nc = c + dc;
+        if (nr >= 1 && nr < MAZE_ROWS - 1 && nc >= 1 && nc < MAZE_COLS - 1 && grid[nr][nc] === 1) {
+          grid[r][c] = 0;
+          grid[nr][nc] = 0;
+          grid[r + dr / 2][c + dc / 2] = 0;
+          carve(nr, nc);
+        }
+      }
+      if (grid[r][c] === 1) grid[r][c] = 0;
+    }
+
+    function initMaze() {
+      grid = [];
+      for (let r = 0; r < MAZE_ROWS; r++) {
+        grid[r] = [];
+        for (let c = 0; c < MAZE_COLS; c++) grid[r][c] = 1;
+      }
+      carve(1, 1);
+      grid[1][1] = 0;
+      grid[MAZE_ROWS - 2][MAZE_COLS - 2] = 0;
+      mazeItems = [];
+      const free = [];
+      for (let r = 1; r < MAZE_ROWS - 1; r++) {
+        for (let c = 1; c < MAZE_COLS - 1; c++) {
+          if (grid[r][c] === 0 && (r !== 1 || c !== 1) && (r !== MAZE_ROWS - 2 || c !== MAZE_COLS - 2))
+            free.push({ x: c, y: r });
+        }
+      }
+      const normalCount = Math.min(8 + mazeLevel * 2, Math.max(5, free.length - 4));
+      for (let i = 0; i < normalCount && free.length > 0; i++) {
+        const idx = Math.floor(Math.random() * free.length);
+        mazeItems.push(free.splice(idx, 1)[0]);
+      }
+      const bonusCount = Math.min(3, free.length);
+      for (let i = 0; i < bonusCount && free.length > 0; i++) {
+        const idx = Math.floor(Math.random() * free.length);
+        mazeItems.push({ ...free.splice(idx, 1)[0], bonus: BONUS_TYPES[i % BONUS_TYPES.length] });
+      }
+      mazeTotalItems = mazeItems.filter(it => !it.bonus).length;
+      mazeCollected = 0;
+      mazePlayer = { x: 1, y: 1 };
+      bonusSpeed = bonusJump = bonusGhost = 0;
+      document.getElementById('mazeScore').textContent = mazeCollected;
+      document.getElementById('mazeTotal').textContent = mazeTotalItems;
+      document.getElementById('mazeLevel').textContent = mazeLevel;
+      document.getElementById('mazeWinMsg').classList.remove('show');
+      updateMazeBonus();
+      drawMaze();
+    }
+
+    function updateMazeBonus() {
+      const parts = [];
+      if (bonusSpeed > 0) parts.push('Rychlost ×' + bonusSpeed);
+      if (bonusJump > 0) parts.push('Skok ×' + bonusJump);
+      if (bonusGhost > 0) parts.push('Průchod zdí ×' + bonusGhost);
+      document.getElementById('mazeBonus').textContent = parts.length ? parts.join(' | ') : '—';
+    }
+
+    function findJumpTarget(fromX, fromY, dx, dy) {
+      let x = fromX + dx, y = fromY + dy;
+      while (x >= 0 && x < MAZE_COLS && y >= 0 && y < MAZE_ROWS && grid[y][x] === 1) { x += dx; y += dy; }
+      if (x >= 0 && x < MAZE_COLS && y >= 0 && y < MAZE_ROWS && grid[y][x] === 0) return { x, y };
+      return null;
+    }
+
+    function tryMazeMove(dx, dy) {
+      let nx = mazePlayer.x + dx, ny = mazePlayer.y + dy;
+      if (nx < 0 || nx >= MAZE_COLS || ny < 0 || ny >= MAZE_ROWS) return false;
+      if (grid[ny][nx] === 1) {
+        if (bonusGhost > 0) { bonusGhost--; updateMazeBonus(); }
+        else if (bonusJump > 0) {
+          const target = findJumpTarget(mazePlayer.x, mazePlayer.y, dx, dy);
+          if (target) { bonusJump--; updateMazeBonus(); nx = target.x; ny = target.y; }
+          else return false;
+        } else return false;
+      }
+      mazePlayer.x = nx; mazePlayer.y = ny;
+      return true;
+    }
+
+    function collectMazeAtPosition() {
+      const idx = mazeItems.findIndex(it => it.x === mazePlayer.x && it.y === mazePlayer.y);
+      if (idx === -1) return;
+      const it = mazeItems[idx];
+      mazeItems.splice(idx, 1);
+      if (it.bonus) {
+        if (typeof window.Sound === 'object' && window.Sound.bonus) window.Sound.bonus();
+        if (it.bonus === 'speed') bonusSpeed += 12;
+        else if (it.bonus === 'jump') bonusJump += 3;
+        else bonusGhost += 15;
+        updateMazeBonus();
+      } else {
+        if (typeof window.Sound === 'object' && window.Sound.collect) window.Sound.collect();
+        mazeCollected++;
+        document.getElementById('mazeScore').textContent = mazeCollected;
+        if (mazeCollected >= mazeTotalItems) {
+          if (typeof window.Sound === 'object' && window.Sound.win) window.Sound.win();
+          document.getElementById('mazeWinMsg').classList.add('show');
+          if (mazeLevel >= 10) {
+            document.getElementById('mazeWinMsg').textContent = '🎉 Hotovo! Všechných 10 levelů!';
+          } else {
+            document.getElementById('mazeWinMsg').textContent = '🎉 Level ' + mazeLevel + ' dokončen!';
+            mazeLevel++;
+            document.getElementById('mazeLevel').textContent = mazeLevel;
+            setTimeout(initMaze, 1800);
+          }
+        }
+      }
+    }
+
+    function mazeMove(dx, dy) {
+      if (!tryMazeMove(dx, dy)) return;
+      collectMazeAtPosition();
+      if (bonusSpeed > 0) { bonusSpeed--; updateMazeBonus(); tryMazeMove(dx, dy); collectMazeAtPosition(); }
+      drawMaze();
+    }
+
+    function drawMaze() {
+      mazeCtx.fillStyle = '#0d1b2a';
+      mazeCtx.fillRect(0, 0, mazeCanvas.width, mazeCanvas.height);
+      for (let r = 0; r < MAZE_ROWS; r++) {
+        for (let c = 0; c < MAZE_COLS; c++) {
+          const x = c * TILE, y = r * TILE;
+          if (grid[r][c] === 1) {
+            mazeCtx.fillStyle = '#415a77';
+            mazeCtx.fillRect(x, y, TILE, TILE);
+            mazeCtx.strokeStyle = '#778da9';
+            mazeCtx.strokeRect(x, y, TILE, TILE);
+          }
+        }
+      }
+      mazeItems.forEach(it => {
+        if (it.bonus) {
+          if (it.bonus === 'speed') { mazeCtx.fillStyle = '#60a5fa'; mazeCtx.strokeStyle = '#3b82f6'; }
+          else if (it.bonus === 'jump') { mazeCtx.fillStyle = '#4ade80'; mazeCtx.strokeStyle = '#22c55e'; }
+          else { mazeCtx.fillStyle = '#a78bfa'; mazeCtx.strokeStyle = '#7c3aed'; }
+        } else { mazeCtx.fillStyle = '#ffd166'; mazeCtx.strokeStyle = '#e09b2a'; }
+        mazeCtx.beginPath();
+        mazeCtx.arc(it.x * TILE + TILE/2, it.y * TILE + TILE/2, it.bonus ? 7 : 6, 0, Math.PI*2);
+        mazeCtx.fill(); mazeCtx.stroke();
+      });
+      const px = mazePlayer.x * TILE, py = mazePlayer.y * TILE;
+      mazeCtx.fillStyle = '#4ade80';
+      mazeCtx.beginPath();
+      mazeCtx.arc(px + TILE/2, py + TILE/2, TILE/2 - 2, 0, Math.PI*2);
+      mazeCtx.fill();
+      mazeCtx.strokeStyle = '#22c55e';
+      mazeCtx.stroke();
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (!document.getElementById('mazeScreen').classList.contains('active')) return;
+      e.preventDefault();
+      switch (e.key) {
+        case 'ArrowUp': case 'w': case 'W': mazeMove(0, -1); break;
+        case 'ArrowDown': case 's': case 'S': mazeMove(0, 1); break;
+        case 'ArrowLeft': case 'a': case 'A': mazeMove(-1, 0); break;
+        case 'ArrowRight': case 'd': case 'D': mazeMove(1, 0); break;
+      }
+    });
+
+    // === DOBRODRUŽSTVÍ V NOCI (platformer) ===
+    const advCanvas = document.getElementById('adventureCanvas');
+    const advCtx = advCanvas.getContext('2d');
+    const GRAVITY = 0.5;
+    const JUMP = -12;
+    const RUN = 5;
+    const ADV_W = 800, ADV_H = 450;
+    let advPlayer = { x: 80, y: 300, vx: 0, vy: 0, w: 28, h: 32 };
+    let advPlatforms = [];
+    let advMonsters = [];
+    let advStars = [];
+    let advLives = 3, advScore = 0;
+    let advKeys = {};
+    let advGameOver = false;
+
+    function buildAdventureLevel() {
+      advPlatforms = [
+        { x: 0, y: ADV_H - 40, w: ADV_W, h: 40 },
+        { x: 150, y: 350, w: 120, h: 16 },
+        { x: 350, y: 280, w: 100, h: 16 },
+        { x: 520, y: 320, w: 140, h: 16 },
+        { x: 650, y: 220, w: 120, h: 16 },
+        { x: 200, y: 200, w: 80, h: 14 },
+        { x: 400, y: 150, w: 90, h: 14 }
+      ];
+      advMonsters = [
+        { x: 200, y: 318, w: 32, h: 32, vx: 1.2, left: 180, right: 280 },
+        { x: 400, y: 248, w: 32, h: 32, vx: -1, left: 350, right: 450 },
+        { x: 580, y: 288, w: 32, h: 32, vx: 1, left: 520, right: 680 },
+        { x: 320, y: 118, w: 28, h: 28, vx: -0.8, left: 200, right: 490 }
+      ];
+      advStars = [
+        { x: 200, y: 310, r: 12, collected: false },
+        { x: 400, y: 240, r: 12, collected: false },
+        { x: 590, y: 280, r: 12, collected: false },
+        { x: 240, y: 160, r: 12, collected: false },
+        { x: 440, y: 110, r: 12, collected: false },
+        { x: 700, y: 180, r: 12, collected: false },
+        { x: 100, y: 320, r: 12, collected: false },
+        { x: 500, y: 380, r: 12, collected: false }
+      ];
+      advPlayer.x = 80;
+      advPlayer.y = 300;
+      advPlayer.vx = 0;
+      advPlayer.vy = 0;
+    }
+
+    function initAdventure() {
+      advLives = 3;
+      advScore = 0;
+      advGameOver = false;
+      advLastTime = performance.now();
+      buildAdventureLevel();
+      document.getElementById('adventureLives').textContent = advLives;
+      document.getElementById('adventureScore').textContent = advScore;
+    }
+
+    function advRectOverlap(a, b) {
+      return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
+    }
+
+    function advUpdate(dt) {
+      if (advGameOver) return;
+      const p = advPlayer;
+      if (advKeys['ArrowLeft'] || advKeys['a'] || advKeys['A']) p.vx = -RUN;
+      else if (advKeys['ArrowRight'] || advKeys['d'] || advKeys['D']) p.vx = RUN;
+      else p.vx = 0;
+      if ((advKeys['ArrowUp'] || advKeys['w'] || advKeys['W'] || advKeys[' ']) && p.onGround) {
+        p.vy = JUMP;
+        p.onGround = false;
+        if (window.Sound && window.Sound.jump) window.Sound.jump();
+      }
+      p.vy += GRAVITY * (dt / 16);
+      p.x += p.vx * (dt / 16);
+      p.y += p.vy * (dt / 16);
+      if (p.x < 0) p.x = 0;
+      if (p.x + p.w > ADV_W) p.x = ADV_W - p.w;
+      p.onGround = false;
+      advPlatforms.forEach(pl => {
+        if (!advRectOverlap(p, pl)) return;
+        const overlapTop = (pl.y + pl.h) - p.y;
+        const overlapBottom = (p.y + p.h) - pl.y;
+        const overlapLeft = (pl.x + pl.w) - p.x;
+        const overlapRight = (p.x + p.w) - pl.x;
+        const minOverlap = Math.min(overlapTop, overlapBottom, overlapLeft, overlapRight);
+        if (minOverlap === overlapBottom && p.vy >= 0) {
+          p.y = pl.y - p.h;
+          p.vy = 0;
+          p.onGround = true;
+        } else if (minOverlap === overlapTop && p.vy <= 0) {
+          p.y = pl.y + pl.h;
+          p.vy = 0;
+        } else if (minOverlap === overlapLeft) {
+          p.x = pl.x - p.w;
+          p.vx = 0;
+        } else if (minOverlap === overlapRight) {
+          p.x = pl.x + pl.w;
+          p.vx = 0;
+        }
+      });
+      let advJustDied = false;
+      advMonsters.forEach(m => {
+        m.x += m.vx * (dt / 16);
+        if (m.x <= m.left) { m.x = m.left; m.vx = -m.vx; }
+        if (m.x + m.w >= m.right) { m.x = m.right - m.w; m.vx = -m.vx; }
+      });
+      advMonsters = advMonsters.filter(m => {
+        if (!advRectOverlap(p, m)) return true;
+        const hitFromTop = p.vy >= 0 && p.y + p.h - 8 <= m.y + 12;
+        if (hitFromTop) {
+          if (window.Sound && window.Sound.hit) window.Sound.hit();
+          advScore += 100;
+          document.getElementById('adventureScore').textContent = advScore;
+          return false;
+        }
+        if (window.Sound && window.Sound.gameOver) window.Sound.gameOver();
+        advLives--;
+        document.getElementById('adventureLives').textContent = advLives;
+        if (advLives <= 0) advGameOver = true;
+        advJustDied = true;
+        return true;
+      });
+      if (advJustDied) buildAdventureLevel();
+      advStars.forEach(s => {
+        if (s.collected) return;
+        const dx = (p.x + p.w/2) - s.x, dy = (p.y + p.h/2) - s.y;
+        if (Math.hypot(dx, dy) < p.w/2 + s.r) {
+          s.collected = true;
+          if (window.Sound && window.Sound.collect) window.Sound.collect();
+          advScore += 50;
+          document.getElementById('adventureScore').textContent = advScore;
+        }
+      });
+      if (p.y > ADV_H) {
+        advLives--;
+        document.getElementById('adventureLives').textContent = advLives;
+        if (advLives <= 0) { advGameOver = true; if (window.Sound && window.Sound.gameOver) window.Sound.gameOver(); }
+        else if (window.Sound && window.Sound.hit) window.Sound.hit();
+        buildAdventureLevel();
+      }
+    }
+
+    function advDraw() {
+      advCtx.fillStyle = '#0d0221';
+      advCtx.fillRect(0, 0, ADV_W, ADV_H);
+      advCtx.fillStyle = 'rgba(255,255,255,0.08)';
+      advCtx.beginPath();
+      advCtx.arc(650, 80, 50, 0, Math.PI * 2);
+      advCtx.fill();
+      advCtx.fillStyle = '#1a0a2e';
+      advPlatforms.forEach(pl => {
+        advCtx.fillRect(pl.x, pl.y, pl.w, pl.h);
+        advCtx.strokeStyle = '#3d2a4a';
+        advCtx.lineWidth = 2;
+        advCtx.strokeRect(pl.x, pl.y, pl.w, pl.h);
+      });
+      advStars.forEach(s => {
+        if (s.collected) return;
+        advCtx.fillStyle = '#ffd54f';
+        advCtx.beginPath();
+        advCtx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        advCtx.fill();
+        advCtx.strokeStyle = '#ffb300';
+        advCtx.stroke();
+      });
+      advMonsters.forEach(m => {
+        advCtx.fillStyle = '#4a1942';
+        advCtx.fillRect(m.x, m.y, m.w, m.h);
+        advCtx.fillStyle = '#8b4513';
+        advCtx.fillRect(m.x + 6, m.y + 8, 8, 8);
+        advCtx.fillRect(m.x + m.w - 14, m.y + 8, 8, 8);
+      });
+      const p = advPlayer;
+      advCtx.fillStyle = '#7c9eb2';
+      advCtx.fillRect(p.x, p.y, p.w, p.h);
+      advCtx.strokeStyle = '#4a6572';
+      advCtx.lineWidth = 2;
+      advCtx.strokeRect(p.x, p.y, p.w, p.h);
+      if (advGameOver) {
+        advCtx.fillStyle = 'rgba(0,0,0,0.75)';
+        advCtx.fillRect(0, 0, ADV_W, ADV_H);
+        advCtx.fillStyle = '#e8d5b7';
+        advCtx.font = 'bold 36px Nunito';
+        advCtx.textAlign = 'center';
+        advCtx.fillText('Konec hry – došly životy!', ADV_W/2, ADV_H/2 - 20);
+        advCtx.fillText('Score: ' + advScore, ADV_W/2, ADV_H/2 + 20);
+        advCtx.font = '18px Nunito';
+        advCtx.fillText('Zpět do menu = tlačítko pod hrou', ADV_W/2, ADV_H/2 + 55);
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (document.getElementById('adventureScreen').classList.contains('active')) {
+        advKeys[e.key] = true;
+        if (e.key === ' ') e.preventDefault();
+      }
+    });
+    document.addEventListener('keyup', (e) => { advKeys[e.key] = false; });
+
+    let advLastTime = performance.now();
+    function adventureLoop() {
+      if (document.getElementById('adventureScreen').classList.contains('active')) {
+        const now = performance.now();
+        advUpdate(now - advLastTime);
+        advDraw();
+        advLastTime = now;
+      }
+      requestAnimationFrame(adventureLoop);
+    }
+    requestAnimationFrame(adventureLoop);
+
+    // === SUBWAY SURFERS (pohled zezadu, kluk, mince, bonusy, polda) ===
+    const subCanvas = document.getElementById('subwayCanvas');
+    const subCtx = subCanvas.getContext('2d');
+    const SUB_W = 500, SUB_H = 500;
+    const PLAYER_Y = SUB_H - 75;
+    const LANE_W_NEAR = 95;
+    const LANE_W_FAR = 28;
+    let subLane = 1;
+    let subJumpTimer = 0, subSlideTimer = 0;
+    let subObstacles = [];
+    let subCoins = [];
+    let subBonuses = [];
+    let subScore = 0, subCoinCount = 0, subCoinBonus = 0, subDistance = 0;
+    let subSpeed = 5.2;
+    let subSpawnTimer = 0;
+    let subGameOver = false;
+    let subKeys = {};
+    let subLaneCooldown = 0;
+    let subCopDistance = 320;
+    let subBonusMagnet = 0, subBonus2x = 0, subBonusShield = 0, subBonusJetpack = 0;
+    let subRunFrame = 0;
+
+    function subLaneX(lane, y) {
+      const t = (SUB_H - y) / SUB_H;
+      const laneW = LANE_W_FAR + (LANE_W_NEAR - LANE_W_FAR) * (1 - t);
+      return SUB_W / 2 + (lane - 1) * laneW;
+    }
+
+    function subScale(y) {
+      return 0.3 + 0.7 * (y / SUB_H);
+    }
+
+    function subTodayKey() {
+      var d = new Date();
+      return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    }
+    function subLoadBest() {
+      try {
+        var key = subTodayKey();
+        var saved = localStorage.getItem('subwayBest_' + key);
+        if (saved) {
+          var o = JSON.parse(saved);
+          var elS = document.getElementById('subwayBestScore');
+          var elD = document.getElementById('subwayBestDist');
+          var elC = document.getElementById('subwayBestCoins');
+          if (elS) elS.textContent = o.score || 0;
+          if (elD) elD.textContent = o.dist || 0;
+          if (elC) elC.textContent = o.coins || 0;
+          return o;
+        }
+      } catch (e) {}
+      var elS = document.getElementById('subwayBestScore');
+      var elD = document.getElementById('subwayBestDist');
+      var elC = document.getElementById('subwayBestCoins');
+      if (elS) elS.textContent = '0';
+      if (elD) elD.textContent = '0';
+      if (elC) elC.textContent = '0';
+      return { score: 0, dist: 0, coins: 0 };
+    }
+    function subSaveBest() {
+      try {
+        var key = subTodayKey();
+        var curScore = subScore || 0;
+        var curDist = Math.floor(subDistance || 0);
+        var curCoins = subCoinCount || 0;
+        var saved = localStorage.getItem('subwayBest_' + key);
+        var o = saved ? JSON.parse(saved) : { score: 0, dist: 0, coins: 0 };
+        var upd = false;
+        if (curScore > (o.score || 0)) { o.score = curScore; upd = true; }
+        if (curDist > (o.dist || 0)) { o.dist = curDist; upd = true; }
+        if (curCoins > (o.coins || 0)) { o.coins = curCoins; upd = true; }
+        if (upd) {
+          localStorage.setItem('subwayBest_' + key, JSON.stringify(o));
+          var elS = document.getElementById('subwayBestScore');
+          var elD = document.getElementById('subwayBestDist');
+          var elC = document.getElementById('subwayBestCoins');
+          if (elS) elS.textContent = o.score;
+          if (elD) elD.textContent = o.dist;
+          if (elC) elC.textContent = o.coins;
+        }
+      } catch (e) {}
+    }
+
+    function initSubway() {
+      subLane = 1;
+      subJumpTimer = 0;
+      subSlideTimer = 0;
+      subLaneCooldown = 0;
+      subObstacles = [];
+      subCoins = [];
+      subBonuses = [];
+      subScore = 0;
+      subCoinCount = 0;
+      subCoinBonus = 0;
+      subDistance = 0;
+      subSpeed = 5.2;
+      subSpawnTimer = 0;
+      subGameOver = false;
+      subCopDistance = 320;
+      subBonusMagnet = 0;
+      subBonus2x = 0;
+      subBonusShield = 0;
+      subBonusJetpack = 0;
+      subRunFrame = 0;
+      document.getElementById('subwayScore').textContent = 0;
+      document.getElementById('subwayCoins').textContent = 0;
+      subLoadBest();
+      subLastTime = performance.now();
+    }
+
+    function subUpdate(dt) {
+      if (subGameOver) return;
+      dt = Math.min(dt, 200);
+      const dtNorm = dt / 16;
+      subDistance += subSpeed * dtNorm;
+      const points = Math.floor(subDistance / 5) + subCoinBonus;
+      subScore = subBonus2x > 0 ? points * 2 : points;
+      document.getElementById('subwayScore').textContent = subScore;
+      document.getElementById('subwayCoins').textContent = subCoinCount;
+      subSaveBest();
+      if (subSpeed < 12.5) subSpeed += 0.0012 * dtNorm;
+
+      if (subBonusMagnet > 0) subBonusMagnet -= dtNorm;
+      if (subBonus2x > 0) subBonus2x -= dtNorm;
+      if (subBonusShield > 0) subBonusShield -= dtNorm;
+      if (subBonusJetpack > 0) subBonusJetpack -= dtNorm;
+
+      subRunFrame += dtNorm * 0.25;
+
+      if (subLaneCooldown > 0) subLaneCooldown -= dtNorm;
+      if (subLaneCooldown <= 0) {
+        if (subKeys['ArrowLeft'] || subKeys['a'] || subKeys['A']) { subLane = Math.max(0, subLane - 1); subLaneCooldown = 14; }
+        if (subKeys['ArrowRight'] || subKeys['d'] || subKeys['D']) { subLane = Math.min(2, subLane + 1); subLaneCooldown = 14; }
+      }
+      if ((subKeys['ArrowUp'] || subKeys['w'] || subKeys['W']) && subJumpTimer <= 0 && subSlideTimer <= 0) { subJumpTimer = 30; if (window.Sound && window.Sound.jump) window.Sound.jump(); }
+      if ((subKeys['ArrowDown'] || subKeys['s'] || subKeys['S']) && subSlideTimer <= 0 && subJumpTimer <= 0) { subSlideTimer = 38; if (window.Sound && window.Sound.slide) window.Sound.slide(); }
+
+      if (subJumpTimer > 0) subJumpTimer -= dtNorm;
+      if (subSlideTimer > 0) subSlideTimer -= dtNorm;
+
+      subObstacles.forEach(o => o.y += subSpeed * dtNorm);
+      subObstacles = subObstacles.filter(o => o.y < SUB_H + 80);
+      subCoins.forEach(c => c.y += subSpeed * dtNorm);
+      subBonuses.forEach(b => b.y += subSpeed * dtNorm);
+      subBonuses = subBonuses.filter(b => b.y < SUB_H + 80);
+
+      const px = subLaneX(subLane, PLAYER_Y);
+      const py = PLAYER_Y;
+      const jumpOff = subJumpTimer > 0 ? (30 - subJumpTimer) * 1.8 : 0;
+      const slideOff = subSlideTimer > 0 ? 18 : 0;
+      const hitY = py - jumpOff + slideOff;
+      const hitW = 28;
+      const hitH = slideOff > 0 ? 25 : 42;
+
+      subCoins = subCoins.filter(c => {
+        const cx = subLaneX(c.lane, c.y);
+        const inLane = subBonusMagnet > 0 ? Math.abs(cx - px) < 120 : (c.lane === subLane);
+        if (!inLane) return true;
+        const cy = c.y;
+        if (cy + 15 < hitY || cy - 15 > hitY + hitH) return true;
+        if (subBonusMagnet > 0 || (cx > px - hitW && cx < px + hitW)) {
+          if (window.Sound && window.Sound.collect) window.Sound.collect();
+          subCoinCount++;
+          subCoinBonus += subBonus2x > 0 ? 20 : 10;
+          subCopDistance = Math.min(400, subCopDistance + 18);
+          return false;
+        }
+        return true;
+      });
+
+      subBonuses = subBonuses.filter(b => {
+        const bx = subLaneX(b.lane, b.y);
+        if (b.lane !== subLane) return true;
+        if (b.y + 20 < hitY || b.y - 20 > hitY + hitH) return true;
+        if (bx > px - 25 && bx < px + 25) {
+          if (window.Sound && window.Sound.bonus) window.Sound.bonus();
+          if (b.type === 'magnet') subBonusMagnet = 300;
+          if (b.type === '2x') subBonus2x = 400;
+          if (b.type === 'shield') subBonusShield = 1;
+          if (b.type === 'jetpack') subBonusJetpack = 420;
+          return false;
+        }
+        return true;
+      });
+
+      if (subBonusJetpack <= 0) {
+        const pHalfW = 14;
+        const pHalfH = 18;
+        subObstacles.forEach(o => {
+          if (o.lane !== subLane) return;
+          const oy = o.y;
+          const oTop = o.type === 'barrier' ? oy - 15 : oy + 5;
+          const oBottom = o.type === 'barrier' ? oy + 35 : oy + 35;
+          if (hitY + hitH - 4 < oTop || hitY + 4 > oBottom) return;
+          const ox = subLaneX(o.lane, oy);
+          const oHalfW = 18;
+          if (ox + oHalfW < px - pHalfW || ox - oHalfW > px + pHalfW) return;
+          if (o.type === 'barrier') {
+            if (subJumpTimer <= 0) {
+              if (subBonusShield > 0) subBonusShield = 0;
+              else { if (window.Sound && window.Sound.gameOver) window.Sound.gameOver(); subGameOver = true; subCopDistance = 0; subSaveBest(); }
+            }
+          } else {
+            if (subSlideTimer <= 0) {
+              if (subBonusShield > 0) subBonusShield = 0;
+              else { if (window.Sound && window.Sound.gameOver) window.Sound.gameOver(); subGameOver = true; subCopDistance = 0; subSaveBest(); }
+            }
+          }
+        });
+      }
+
+      subCopDistance = Math.min(400, subCopDistance + 0.5 * dtNorm);
+      if (subCopDistance <= 0) { subGameOver = true; if (window.Sound && window.Sound.gameOver) window.Sound.gameOver(); subSaveBest(); }
+      const meter = document.getElementById('subwayCopMeter');
+      const dots = subCopDistance > 280 ? '●●●●●' : subCopDistance > 200 ? '●●●●○' : subCopDistance > 120 ? '●●●○○' : subCopDistance > 50 ? '●●○○○' : '●○○○○';
+      if (meter) meter.textContent = dots;
+    }
+
+    function subDrawSky() {
+      const g = subCtx.createLinearGradient(0, 0, 0, SUB_H * 0.55);
+      g.addColorStop(0, '#87CEEB');
+      g.addColorStop(0.6, '#B0E0E6');
+      g.addColorStop(1, '#E0F4F0');
+      subCtx.fillStyle = g;
+      subCtx.fillRect(0, 0, SUB_W, SUB_H * 0.55);
+    }
+
+    function subDrawTrack() {
+      for (let row = 0; row <= 24; row++) {
+        const y = (row / 24) * SUB_H;
+        const t = row / 24;
+        const laneW = LANE_W_FAR + (LANE_W_NEAR - LANE_W_FAR) * t;
+        const left = subLaneX(0, y) - laneW / 2;
+        const right = subLaneX(2, y) + laneW / 2;
+        subCtx.fillStyle = row % 2 === 0 ? 'rgba(80,80,90,0.9)' : 'rgba(60,60,70,0.95)';
+        subCtx.beginPath();
+        subCtx.moveTo(left, y);
+        subCtx.lineTo(subLaneX(1, y) - laneW / 2, y);
+        subCtx.lineTo(subLaneX(1, y) + laneW / 2, y);
+        subCtx.lineTo(right, y);
+        subCtx.closePath();
+        subCtx.fill();
+      }
+      subCtx.strokeStyle = 'rgba(100,100,110,0.8)';
+      subCtx.lineWidth = 2;
+      for (let L = 0; L <= 2; L++) {
+        subCtx.beginPath();
+        for (let row = 0; row <= 24; row++) {
+          const y = (row / 24) * SUB_H;
+          const x = subLaneX(L, y);
+          if (row === 0) subCtx.moveTo(x, y);
+          else subCtx.lineTo(x, y);
+        }
+        subCtx.stroke();
+      }
+    }
+
+    function subDrawCop() {
+      const copY = PLAYER_Y - subCopDistance * 0.6;
+      if (copY < -40) return;
+      const s = subScale(Math.max(0, copY));
+      const cx = SUB_W / 2;
+      const copLegSwing = Math.sin(subRunFrame * 1.1) * 14;
+      subCtx.save();
+      subCtx.translate(cx, copY);
+      subCtx.scale(s, s);
+      subCtx.fillStyle = '#2c3e50';
+      subCtx.beginPath();
+      subCtx.arc(0, -8, 12, 0, Math.PI * 2);
+      subCtx.fill();
+      subCtx.fillStyle = '#1a252f';
+      subCtx.fillRect(-6, 4, 12, 18);
+      subCtx.fillStyle = '#3498db';
+      subCtx.fillRect(-8, 2, 16, 8);
+      subCtx.fillStyle = '#1e3a5f';
+      subCtx.fillRect(-5, 6, 4, 8);
+      subCtx.fillRect(1, 6, 4, 8);
+      subCtx.fillStyle = '#2c3e50';
+      subCtx.fillRect(-8 + copLegSwing * 0.3, 22, 6, 12);
+      subCtx.fillRect(2 - copLegSwing * 0.3, 24, 6, 12);
+      subCtx.fillStyle = '#e74c3c';
+      subCtx.beginPath();
+      subCtx.arc(10, -12, 5, 0, Math.PI * 2);
+      subCtx.fill();
+      subCtx.fillStyle = '#ecf0f1';
+      subCtx.fillRect(-3, -14, 6, 4);
+      subCtx.restore();
+    }
+
+    function subDrawKlik(x, y, jumpOff, slideOff, jetpack) {
+      subCtx.save();
+      subCtx.translate(x, y);
+      const scale = subScale(y);
+      subCtx.scale(scale, scale);
+      const legSwing = Math.sin(subRunFrame) * 12;
+      if (jetpack) {
+        subCtx.fillStyle = 'rgba(230, 126, 34, 0.9)';
+        subCtx.beginPath();
+        subCtx.moveTo(-8, 20);
+        subCtx.lineTo(-4, 32 + Math.sin(subRunFrame * 2) * 4);
+        subCtx.lineTo(0, 28 + Math.sin(subRunFrame * 2 + 0.5) * 5);
+        subCtx.lineTo(4, 32 + Math.sin(subRunFrame * 2 + 1) * 4);
+        subCtx.lineTo(8, 20);
+        subCtx.closePath();
+        subCtx.fill();
+        subCtx.fillStyle = 'rgba(243, 156, 18, 0.95)';
+        subCtx.beginPath();
+        subCtx.moveTo(-4, 24);
+        subCtx.lineTo(0, 36);
+        subCtx.lineTo(4, 24);
+        subCtx.closePath();
+        subCtx.fill();
+      }
+      if (slideOff > 0 && !jetpack) {
+        subCtx.fillStyle = '#f4d03f';
+        subCtx.beginPath();
+        subCtx.arc(0, -18, 14, 0, Math.PI * 2);
+        subCtx.fill();
+        subCtx.strokeStyle = '#2c3e50';
+        subCtx.lineWidth = 2;
+        subCtx.stroke();
+        subCtx.fillStyle = '#27ae60';
+        subCtx.fillRect(-12, -4, 24, 16);
+        subCtx.fillStyle = '#2ecc71';
+        subCtx.fillRect(-10, -2, 20, 8);
+        subCtx.fillStyle = '#1e8449';
+        subCtx.fillRect(-8, 8, 10, 6);
+        subCtx.fillRect(2, 10, 10, 6);
+      } else if (!jetpack) {
+        subCtx.fillStyle = '#f4d03f';
+        subCtx.beginPath();
+        subCtx.arc(0, -22 + jumpOff * 0.5, 14, 0, Math.PI * 2);
+        subCtx.fill();
+        subCtx.strokeStyle = '#2c3e50';
+        subCtx.lineWidth = 2;
+        subCtx.stroke();
+        subCtx.fillStyle = '#27ae60';
+        subCtx.fillRect(-14, -8 + jumpOff * 0.3, 28, 22);
+        subCtx.fillStyle = '#2ecc71';
+        subCtx.fillRect(-12, -6 + jumpOff * 0.3, 22, 12);
+        subCtx.fillStyle = '#1e8449';
+        subCtx.fillRect(-12 + legSwing, 14, 8, 14);
+        subCtx.fillRect(4 - legSwing, 16, 8, 14);
+        subCtx.fillStyle = '#e67e22';
+        subCtx.fillRect(-6, 12, 6, 10);
+        subCtx.fillRect(2, 14, 6, 10);
+      } else {
+        subCtx.fillStyle = '#f4d03f';
+        subCtx.beginPath();
+        subCtx.arc(0, -22, 14, 0, Math.PI * 2);
+        subCtx.fill();
+        subCtx.strokeStyle = '#2c3e50';
+        subCtx.lineWidth = 2;
+        subCtx.stroke();
+        subCtx.fillStyle = '#27ae60';
+        subCtx.fillRect(-14, -8, 28, 22);
+        subCtx.fillStyle = '#2ecc71';
+        subCtx.fillRect(-12, -6, 22, 12);
+      }
+      if (subBonusShield > 0) {
+        subCtx.strokeStyle = 'rgba(52, 152, 219, 0.8)';
+        subCtx.lineWidth = 3;
+        subCtx.beginPath();
+        subCtx.arc(0, -10, 28, 0, Math.PI * 2);
+        subCtx.stroke();
+      }
+      subCtx.restore();
+    }
+
+    function subDraw() {
+      subCtx.clearRect(0, 0, SUB_W, SUB_H);
+      subDrawSky();
+      subDrawTrack();
+
+      subObstacles.forEach(o => {
+        const ox = subLaneX(o.lane, o.y);
+        const s = subScale(o.y);
+        subCtx.save();
+        subCtx.translate(ox, o.y);
+        subCtx.scale(s, s);
+        if (o.type === 'barrier') {
+          subCtx.fillStyle = '#E85D04';
+          subCtx.beginPath();
+          subCtx.moveTo(-16, -15);
+          subCtx.lineTo(16, -15);
+          subCtx.arc(16, -9, 6, -Math.PI/2, Math.PI/2);
+          subCtx.lineTo(16, 35);
+          subCtx.arc(0, 35, 6, 0, Math.PI);
+          subCtx.lineTo(-16, 35);
+          subCtx.arc(-16, -9, 6, Math.PI/2, -Math.PI/2);
+          subCtx.closePath();
+          subCtx.fill();
+          subCtx.strokeStyle = '#F7931E';
+          subCtx.lineWidth = 2;
+          subCtx.stroke();
+          subCtx.fillStyle = 'rgba(255,235,200,0.9)';
+          subCtx.fillRect(-16, -8, 10, 12);
+          subCtx.fillRect(-2, -8, 10, 12);
+          subCtx.fillRect(12, -8, 10, 12);
+          subCtx.strokeStyle = '#F7931E';
+          subCtx.lineWidth = 1;
+          subCtx.strokeRect(-16, -8, 10, 12);
+          subCtx.strokeRect(-2, -8, 10, 12);
+          subCtx.strokeRect(12, -8, 10, 12);
+          subCtx.fillStyle = '#2c3e50';
+          subCtx.beginPath();
+          subCtx.arc(-16, 32, 5, 0, Math.PI*2);
+          subCtx.arc(0, 32, 5, 0, Math.PI*2);
+          subCtx.arc(16, 32, 5, 0, Math.PI*2);
+          subCtx.fill();
+        } else {
+          subCtx.fillStyle = '#9d4edd';
+          subCtx.beginPath();
+          subCtx.moveTo(-18, 5);
+          subCtx.lineTo(18, 5);
+          subCtx.lineTo(18, 33);
+          subCtx.arc(0, 33, 6, 0, Math.PI);
+          subCtx.lineTo(-18, 33);
+          subCtx.closePath();
+          subCtx.fill();
+          subCtx.strokeStyle = '#c77dff';
+          subCtx.lineWidth = 2;
+          subCtx.stroke();
+          subCtx.fillStyle = 'rgba(255,240,255,0.85)';
+          subCtx.fillRect(-14, 10, 12, 10);
+          subCtx.fillRect(2, 10, 12, 10);
+          subCtx.strokeStyle = '#c77dff';
+          subCtx.lineWidth = 1;
+          subCtx.strokeRect(-14, 10, 12, 10);
+          subCtx.strokeRect(2, 10, 12, 10);
+          subCtx.fillStyle = '#2c3e50';
+          subCtx.beginPath();
+          subCtx.arc(-12, 31, 4, 0, Math.PI*2);
+          subCtx.arc(12, 31, 4, 0, Math.PI*2);
+          subCtx.fill();
+        }
+        subCtx.restore();
+      });
+
+      subCoins.forEach(c => {
+        const cx = subLaneX(c.lane, c.y);
+        const s = subScale(c.y);
+        subCtx.save();
+        subCtx.translate(cx, c.y);
+        subCtx.scale(s, s);
+        subCtx.fillStyle = '#ffd700';
+        subCtx.beginPath();
+        subCtx.arc(0, 0, 12, 0, Math.PI * 2);
+        subCtx.fill();
+        subCtx.strokeStyle = '#ffb300';
+        subCtx.lineWidth = 2;
+        subCtx.stroke();
+        subCtx.restore();
+      });
+
+      subBonuses.forEach(b => {
+        const bx = subLaneX(b.lane, b.y);
+        const s = subScale(b.y);
+        subCtx.save();
+        subCtx.translate(bx, b.y);
+        subCtx.scale(s, s);
+        if (b.type === 'magnet') {
+          subCtx.fillStyle = '#e74c3c';
+          subCtx.fillRect(-8, -10, 16, 10);
+          subCtx.fillRect(-8, 4, 16, 10);
+          subCtx.fillStyle = '#c0392b';
+          subCtx.fillRect(-12, -4, 8, 8);
+          subCtx.fillRect(4, -4, 8, 8);
+        } else if (b.type === '2x') {
+          subCtx.fillStyle = '#9b59b6';
+          subCtx.fillRect(-12, -12, 24, 24);
+          subCtx.fillStyle = '#fff';
+          subCtx.font = 'bold 16px sans-serif';
+          subCtx.fillText('2×', 0, 6);
+        } else if (b.type === 'shield') {
+          subCtx.strokeStyle = '#3498db';
+          subCtx.lineWidth = 4;
+          subCtx.beginPath();
+          subCtx.arc(0, 0, 14, 0, Math.PI * 2);
+          subCtx.stroke();
+          subCtx.fillStyle = 'rgba(52, 152, 219, 0.3)';
+          subCtx.fill();
+        } else if (b.type === 'jetpack') {
+          subCtx.fillStyle = '#34495e';
+          subCtx.fillRect(-6, -8, 12, 14);
+          subCtx.fillStyle = '#e67e22';
+          subCtx.beginPath();
+          subCtx.moveTo(-4, 8);
+          subCtx.lineTo(0, 14);
+          subCtx.lineTo(4, 8);
+          subCtx.closePath();
+          subCtx.fill();
+          subCtx.fillStyle = '#f39c12';
+          subCtx.fillRect(-3, 10, 6, 5);
+        }
+        subCtx.restore();
+      });
+
+      subDrawCop();
+
+      const px = subLaneX(subLane, PLAYER_Y);
+      const jetpackOff = subBonusJetpack > 0 ? 55 : 0;
+      const jumpOff = subJumpTimer > 0 ? (30 - subJumpTimer) * 1.8 : 0;
+      const slideOff = subSlideTimer > 0 ? 18 : 0;
+      subDrawKlik(px, PLAYER_Y - jetpackOff - jumpOff + slideOff, jumpOff, slideOff, subBonusJetpack > 0);
+
+      if (subGameOver) {
+        subCtx.fillStyle = 'rgba(0,0,0,0.75)';
+        subCtx.fillRect(0, 0, SUB_W, SUB_H);
+        subCtx.fillStyle = '#F7931E';
+        subCtx.font = 'bold 28px Nunito';
+        subCtx.textAlign = 'center';
+        subCtx.fillText('Polda tě chytil!', SUB_W/2, SUB_H/2 - 25);
+        subCtx.fillText('Score: ' + subScore + '  Mince: ' + subCoinCount, SUB_W/2, SUB_H/2 + 15);
+      }
+    }
+
+    subSpawnTimer = 0;
+    (function subSpawn() {
+      if (document.getElementById('subwayScreen').classList.contains('active') && !subGameOver) {
+        subSpawnTimer += 18;
+        if (subSpawnTimer > 36) {
+          subSpawnTimer = 0;
+          const lane = Math.floor(Math.random() * 3);
+          if (Math.random() < 0.32) subObstacles.push({ y: -30, lane, type: Math.random() < 0.5 ? 'barrier' : 'lowBarrier' });
+          if (Math.random() < 0.75) subCoins.push({ y: -20 - Math.random() * 40, lane: Math.floor(Math.random() * 3) });
+          if (Math.random() < 0.09) {
+            const types = ['magnet', '2x', 'shield', 'jetpack'];
+            subBonuses.push({ y: -25, lane: Math.floor(Math.random() * 3), type: types[Math.floor(Math.random() * types.length)] });
+          }
+        }
+      }
+      setTimeout(subSpawn, 80);
+    })();
+
+    document.addEventListener('keydown', (e) => {
+      if (document.getElementById('subwayScreen').classList.contains('active')) {
+        subKeys[e.key] = true;
+        if (['ArrowUp','ArrowDown',' '].includes(e.key)) e.preventDefault();
+      }
+    });
+    document.addEventListener('keyup', (e) => { subKeys[e.key] = false; });
+
+    let subLastTime = performance.now();
+    function subwayLoop() {
+      if (document.getElementById('subwayScreen').classList.contains('active')) {
+        const now = performance.now();
+        subUpdate(now - subLastTime);
+        subDraw();
+        subLastTime = now;
+      }
+      requestAnimationFrame(subwayLoop);
+    }
+    requestAnimationFrame(subwayLoop);
+
+    // === BRAWL STARS ===
+    var BRAWL_W = 500, BRAWL_H = 450;
+    var brawlPlayer = { x: BRAWL_W / 2, y: BRAWL_H / 2, r: 18, speed: 4, health: 100, aimAngle: 0 };
+    var brawlBullets = [];
+    var brawlEnemies = [];
+    var brawlStars = [];
+    var brawlScore = 0;
+    var snakeGameOver = false;
+    var brawlKeys = { up: false, down: false, left: false, right: false, space: false };
+    var brawlMouse = { x: BRAWL_W / 2, y: BRAWL_H / 2 };
+    var brawlLastShot = 0;
+    var BRAWL_SHOOT_COOLDOWN = 250;
+    var brawlEnemySpawn = 0;
+    var brawlStarSpawn = 0;
+    var brawlLastTime = performance.now();
+    var brawlNextHealAt = 1000;
+
+    function brawlTodayKey() {
+      var d = new Date();
+      return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    }
+    function brawlLoadBest() {
+      try {
+        var key = brawlTodayKey();
+        var saved = localStorage.getItem('brawlBest_' + key);
+        if (saved) {
+          var n = parseInt(saved, 10);
+          if (!isNaN(n)) {
+            var el = document.getElementById('brawlBestScore');
+            if (el) el.textContent = n;
+            return n;
+          }
+        }
+      } catch (e) {}
+      var el = document.getElementById('brawlBestScore');
+      if (el) el.textContent = '0';
+      return 0;
+    }
+    function brawlSaveBest() {
+      try {
+        var key = brawlTodayKey();
+        var cur = brawlScore || 0;
+        var saved = localStorage.getItem('brawlBest_' + key);
+        var best = saved ? Math.max(cur, parseInt(saved, 10)) : cur;
+        localStorage.setItem('brawlBest_' + key, String(best));
+        var el = document.getElementById('brawlBestScore');
+        if (el) el.textContent = best;
+      } catch (e) {}
+    }
+
+    function initSnake() {
+      brawlPlayer.x = BRAWL_W / 2;
+      brawlPlayer.y = BRAWL_H / 2;
+      brawlPlayer.health = 100;
+      brawlBullets = [];
+      brawlEnemies = [];
+      brawlStars = [];
+      brawlScore = 0;
+      snakeGameOver = false;
+      brawlEnemySpawn = 0;
+      brawlStarSpawn = 0;
+      brawlMouse.x = BRAWL_W / 2;
+      brawlMouse.y = BRAWL_H / 2;
+      brawlLastTime = performance.now();
+      brawlNextHealAt = 1000;
+      document.getElementById('snakeScore').textContent = '0';
+      document.getElementById('snakeLen').textContent = '100';
+      document.getElementById('snakeOverlay').classList.remove('show');
+      document.getElementById('snakeFinalLen').textContent = '0';
+      brawlLoadBest();
+    }
+
+    function brawlUpdate(dt) {
+      if (snakeGameOver) return;
+      var p = brawlPlayer;
+      var dx = 0, dy = 0;
+      if (brawlKeys.up) dy -= 1;
+      if (brawlKeys.down) dy += 1;
+      if (brawlKeys.left) dx -= 1;
+      if (brawlKeys.right) dx += 1;
+      if (dx !== 0 || dy !== 0) {
+        var len = Math.sqrt(dx * dx + dy * dy);
+        dx /= len; dy /= len;
+        p.x += dx * p.speed * (dt / 16);
+        p.y += dy * p.speed * (dt / 16);
+      }
+      p.x = Math.max(p.r, Math.min(BRAWL_W - p.r, p.x));
+      p.y = Math.max(p.r, Math.min(BRAWL_H - p.r, p.y));
+      p.aimAngle = Math.atan2(brawlMouse.y - p.y, brawlMouse.x - p.x);
+
+      var now = performance.now();
+      if ((now - brawlLastShot > BRAWL_SHOOT_COOLDOWN) && (brawlKeys.space)) {
+        brawlLastShot = now;
+        var spd = 11;
+        brawlBullets.push({
+          x: p.x + Math.cos(p.aimAngle) * (p.r + 4),
+          y: p.y + Math.sin(p.aimAngle) * (p.r + 4),
+          vx: Math.cos(p.aimAngle) * spd,
+          vy: Math.sin(p.aimAngle) * spd
+        });
+        if (window.Sound && window.Sound.shoot) window.Sound.shoot();
+      }
+
+      for (var i = brawlBullets.length - 1; i >= 0; i--) {
+        var b = brawlBullets[i];
+        b.x += b.vx * (dt / 16);
+        b.y += b.vy * (dt / 16);
+        if (b.x < -20 || b.x > BRAWL_W + 20 || b.y < -20 || b.y > BRAWL_H + 20) {
+          brawlBullets.splice(i, 1);
+          continue;
+        }
+        for (var j = brawlEnemies.length - 1; j >= 0; j--) {
+          var e = brawlEnemies[j];
+          var dist = Math.hypot(b.x - e.x, b.y - e.y);
+          if (dist < e.r + 6) {
+            brawlEnemies.splice(j, 1);
+            brawlBullets.splice(i, 1);
+            brawlScore += 15;
+            if (brawlScore >= brawlNextHealAt) {
+              brawlPlayer.health = 100;
+              brawlNextHealAt += 1000;
+              if (window.Sound && window.Sound.bonus) window.Sound.bonus();
+            }
+            if (window.Sound && window.Sound.hit) window.Sound.hit();
+            break;
+          }
+        }
+      }
+
+      brawlEnemySpawn += dt;
+      if (brawlEnemySpawn > 2200) {
+        brawlEnemySpawn = 0;
+        var side = Math.floor(Math.random() * 4);
+        var ex = 0, ey = 0;
+        if (side === 0) { ex = Math.random() * BRAWL_W; ey = -25; }
+        else if (side === 1) { ex = BRAWL_W + 25; ey = Math.random() * BRAWL_H; }
+        else if (side === 2) { ex = Math.random() * BRAWL_W; ey = BRAWL_H + 25; }
+        else { ex = -25; ey = Math.random() * BRAWL_H; }
+        brawlEnemies.push({ x: ex, y: ey, r: 14, speed: 1.2 });
+      }
+
+      for (var i = 0; i < brawlEnemies.length; i++) {
+        var e = brawlEnemies[i];
+        var ax = brawlPlayer.x - e.x, ay = brawlPlayer.y - e.y;
+        var len = Math.hypot(ax, ay) || 1;
+        e.x += (ax / len) * e.speed * (dt / 16);
+        e.y += (ay / len) * e.speed * (dt / 16);
+        var pd = Math.hypot(e.x - p.x, e.y - p.y);
+        if (pd < p.r + e.r) {
+          p.health -= 0.4 * (dt / 16);
+          if (window.Sound && window.Sound.hit) window.Sound.hit();
+        }
+      }
+
+      brawlStarSpawn += dt;
+      if (brawlStarSpawn > 3500) {
+        brawlStarSpawn = 0;
+        brawlStars.push({
+          x: 40 + Math.random() * (BRAWL_W - 80),
+          y: 40 + Math.random() * (BRAWL_H - 80),
+          r: 12
+        });
+      }
+
+      for (var i = brawlStars.length - 1; i >= 0; i--) {
+        var s = brawlStars[i];
+        var sd = Math.hypot(s.x - p.x, s.y - p.y);
+        if (sd < p.r + s.r) {
+          brawlStars.splice(i, 1);
+          brawlScore += 25;
+          if (brawlScore >= brawlNextHealAt) {
+            brawlPlayer.health = 100;
+            brawlNextHealAt += 1000;
+            if (window.Sound && window.Sound.bonus) window.Sound.bonus();
+          }
+          if (window.Sound && window.Sound.collect) window.Sound.collect();
+        }
+      }
+
+      if (p.health <= 0) {
+        p.health = 0;
+        snakeGameOver = true;
+        brawlSaveBest();
+        snakeEndGame();
+      }
+      document.getElementById('snakeScore').textContent = brawlScore;
+      document.getElementById('snakeLen').textContent = Math.max(0, Math.floor(p.health));
+      brawlSaveBest();
+    }
+
+    function snakeEndGame() {
+      if (window.Sound && window.Sound.gameOver) window.Sound.gameOver();
+      document.getElementById('snakeFinalLen').textContent = brawlScore;
+      document.getElementById('snakeOverlay').classList.add('show');
+      brawlSaveBest();
+    }
+
+    function snakeDraw() {
+      var canvas = document.getElementById('snakeCanvas');
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      ctx.fillStyle = '#2d5016';
+      ctx.fillRect(0, 0, BRAWL_W, BRAWL_H);
+      ctx.strokeStyle = '#1b3d0e';
+      ctx.lineWidth = 8;
+      ctx.strokeRect(4, 4, BRAWL_W - 8, BRAWL_H - 8);
+      ctx.fillStyle = 'rgba(0,0,0,0.15)';
+      for (var i = 0; i < 20; i++) {
+        ctx.fillRect(Math.random() * BRAWL_W, Math.random() * BRAWL_H, 30, 30);
+      }
+
+      for (var i = 0; i < brawlStars.length; i++) {
+        var s = brawlStars[i];
+        ctx.fillStyle = '#ffeb3b';
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#f9a825';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+
+      for (var i = 0; i < brawlEnemies.length; i++) {
+        var e = brawlEnemies[i];
+        ctx.fillStyle = '#e53935';
+        ctx.beginPath();
+        ctx.arc(e.x, e.y, e.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#b71c1c';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+
+      for (var i = 0; i < brawlBullets.length; i++) {
+        var b = brawlBullets[i];
+        ctx.fillStyle = '#fff';
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, 5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      var p = brawlPlayer;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.aimAngle);
+      ctx.fillStyle = '#5c6bc0';
+      ctx.beginPath();
+      ctx.arc(0, 0, p.r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#3949ab';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(p.r - 4, -3, 14, 6);
+      ctx.restore();
+      ctx.fillStyle = '#1b5e20';
+      ctx.beginPath();
+      ctx.arc(p.x - 6, p.y - 8, 4, 0, Math.PI * 2);
+      ctx.arc(p.x + 6, p.y - 8, 4, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    var brawlLastTime = performance.now();
+    function snakeLoop(now) {
+      if (document.getElementById('snakeScreen').classList.contains('active')) {
+        var dt = Math.min(now - brawlLastTime, 50);
+        brawlLastTime = now;
+        brawlUpdate(dt);
+        snakeDraw();
+      }
+      requestAnimationFrame(snakeLoop);
+    }
+
+    document.addEventListener('keydown', function(e) {
+      if (!document.getElementById('snakeScreen').classList.contains('active')) return;
+      var k = e.key;
+      if (k === 'ArrowUp' || k === 'w' || k === 'W') { brawlKeys.up = true; e.preventDefault(); }
+      else if (k === 'ArrowDown' || k === 's' || k === 'S') { brawlKeys.down = true; e.preventDefault(); }
+      else if (k === 'ArrowLeft' || k === 'a' || k === 'A') { brawlKeys.left = true; e.preventDefault(); }
+      else if (k === 'ArrowRight' || k === 'd' || k === 'D') { brawlKeys.right = true; e.preventDefault(); }
+      else if (k === ' ') { brawlKeys.space = true; e.preventDefault(); }
+    });
+    document.addEventListener('keyup', function(e) {
+      var k = e.key;
+      if (k === 'ArrowUp' || k === 'w' || k === 'W') brawlKeys.up = false;
+      else if (k === 'ArrowDown' || k === 's' || k === 'S') brawlKeys.down = false;
+      else if (k === 'ArrowLeft' || k === 'a' || k === 'A') brawlKeys.left = false;
+      else if (k === 'ArrowRight' || k === 'd' || k === 'D') brawlKeys.right = false;
+      else if (k === ' ') brawlKeys.space = false;
+    });
+    var snakeCan = document.getElementById('snakeCanvas');
+    if (snakeCan) {
+      snakeCan.addEventListener('mousemove', function(e) {
+        var rect = snakeCan.getBoundingClientRect();
+        var scaleX = snakeCan.width / rect.width;
+        var scaleY = snakeCan.height / rect.height;
+        brawlMouse.x = (e.clientX - rect.left) * scaleX;
+        brawlMouse.y = (e.clientY - rect.top) * scaleY;
+      });
+      snakeCan.addEventListener('click', function() {
+        if (snakeGameOver) return;
+        var now = performance.now();
+        if (now - brawlLastShot > BRAWL_SHOOT_COOLDOWN) {
+          brawlLastShot = now;
+          var p = brawlPlayer;
+          var spd = 11;
+          brawlBullets.push({
+            x: p.x + Math.cos(p.aimAngle) * (p.r + 4),
+            y: p.y + Math.sin(p.aimAngle) * (p.r + 4),
+            vx: Math.cos(p.aimAngle) * spd,
+            vy: Math.sin(p.aimAngle) * spd
+          });
+          if (window.Sound && window.Sound.shoot) window.Sound.shoot();
+        }
+      });
+    }
+
+    (function startSnakeLoop() {
+      if (document.getElementById('snakeScreen')) requestAnimationFrame(snakeLoop);
+    })();
+    var snakeRestartBtn = document.getElementById('snakeRestartBtn');
+    if (snakeRestartBtn) snakeRestartBtn.addEventListener('click', initSnake);
+
+    // === ROZBÍJEČ CIHEL ===
+    var BRICKS_W = 480, BRICKS_H = 400;
+    var bricksPaddle = { x: 200, y: BRICKS_H - 24, w: 80, h: 14 };
+    var bricksBall = { x: BRICKS_W / 2, y: BRICKS_H - 50, vx: 3, vy: -4, r: 8 };
+    var bricksBricks = [];
+    var bricksScore = 0;
+    var bricksLives = 3;
+    var bricksGameOver = false;
+    var bricksWon = false;
+    var bricksKeys = { left: false, right: false };
+    var BRICK_COLS = 10, BRICK_ROWS = 5;
+    var BRICK_W = 44, BRICK_H = 22;
+    var BRICK_PAD = 4;
+
+    function initBricks() {
+      bricksPaddle.x = BRICKS_W / 2 - bricksPaddle.w / 2;
+      bricksBall.x = BRICKS_W / 2;
+      bricksBall.y = BRICKS_H - 50;
+      bricksBall.vx = 3;
+      bricksBall.vy = -4;
+      bricksBricks = [];
+      for (var row = 0; row < BRICK_ROWS; row++) {
+        for (var col = 0; col < BRICK_COLS; col++) {
+          var pts = (BRICK_ROWS - row) * 10;
+          bricksBricks.push({
+            x: BRICK_PAD + col * (BRICK_W + BRICK_PAD),
+            y: 40 + row * (BRICK_H + BRICK_PAD),
+            w: BRICK_W,
+            h: BRICK_H,
+            points: pts,
+            alive: true
+          });
+        }
+      }
+      bricksScore = 0;
+      bricksLives = 3;
+      bricksGameOver = false;
+      bricksWon = false;
+      bricksLastTime = performance.now();
+      document.getElementById('bricksScore').textContent = '0';
+      document.getElementById('bricksLives').textContent = '3';
+      document.getElementById('bricksOverlay').classList.remove('show');
+    }
+
+    function bricksUpdate(dt) {
+      if (bricksGameOver || bricksWon) return;
+      var scale = dt / 16;
+      if (bricksKeys.left) bricksPaddle.x = Math.max(0, bricksPaddle.x - 10 * scale);
+      if (bricksKeys.right) bricksPaddle.x = Math.min(BRICKS_W - bricksPaddle.w, bricksPaddle.x + 10 * scale);
+
+      bricksBall.x += bricksBall.vx * scale;
+      bricksBall.y += bricksBall.vy * scale;
+
+      if (bricksBall.x - bricksBall.r < 0) { bricksBall.x = bricksBall.r; bricksBall.vx = -bricksBall.vx; }
+      if (bricksBall.x + bricksBall.r > BRICKS_W) { bricksBall.x = BRICKS_W - bricksBall.r; bricksBall.vx = -bricksBall.vx; }
+      if (bricksBall.y - bricksBall.r < 0) { bricksBall.y = bricksBall.r; bricksBall.vy = -bricksBall.vy; }
+
+      if (bricksBall.y + bricksBall.r > bricksPaddle.y && bricksBall.y - bricksBall.r < bricksPaddle.y + bricksPaddle.h &&
+          bricksBall.x > bricksPaddle.x && bricksBall.x < bricksPaddle.x + bricksPaddle.w) {
+        bricksBall.vy = -Math.abs(bricksBall.vy);
+        bricksBall.y = bricksPaddle.y - bricksBall.r - 1;
+        var hitPos = (bricksBall.x - bricksPaddle.x) / bricksPaddle.w;
+        bricksBall.vx = (hitPos - 0.5) * 8;
+      }
+
+      for (var i = 0; i < bricksBricks.length; i++) {
+        var b = bricksBricks[i];
+        if (!b.alive) continue;
+        if (bricksBall.x + bricksBall.r > b.x && bricksBall.x - bricksBall.r < b.x + b.w &&
+            bricksBall.y + bricksBall.r > b.y && bricksBall.y - bricksBall.r < b.y + b.h) {
+          b.alive = false;
+          bricksScore += b.points;
+          if (window.Sound && window.Sound.collect) window.Sound.collect();
+          if (bricksBall.vy > 0 && bricksBall.y < b.y + b.h / 2) bricksBall.vy = -bricksBall.vy;
+          else if (bricksBall.vy < 0 && bricksBall.y > b.y + b.h / 2) bricksBall.vy = -bricksBall.vy;
+          else if (bricksBall.vx > 0 && bricksBall.x < b.x + b.w / 2) bricksBall.vx = -bricksBall.vx;
+          else bricksBall.vx = -bricksBall.vx;
+          break;
+        }
+      }
+
+      if (bricksBall.y - bricksBall.r > BRICKS_H) {
+        bricksLives--;
+        document.getElementById('bricksLives').textContent = bricksLives;
+        if (bricksLives <= 0) {
+          bricksGameOver = true;
+          document.getElementById('bricksOverlayMsg').textContent = 'Konec! Score: ' + bricksScore;
+          document.getElementById('bricksOverlay').classList.add('show');
+          if (window.Sound && window.Sound.gameOver) window.Sound.gameOver();
+        } else {
+          bricksBall.x = BRICKS_W / 2;
+          bricksBall.y = BRICKS_H - 50;
+          bricksBall.vx = 3;
+          bricksBall.vy = -4;
+        }
+      }
+
+      var allGone = bricksBricks.every(function(b) { return !b.alive; });
+      if (allGone) {
+        bricksWon = true;
+        document.getElementById('bricksOverlayMsg').textContent = 'Výhra! Rozbil jsi všechny cihly! Score: ' + bricksScore;
+        document.getElementById('bricksOverlay').classList.add('show');
+        if (window.Sound && window.Sound.win) window.Sound.win();
+      }
+
+      document.getElementById('bricksScore').textContent = bricksScore;
+    }
+
+    function bricksDraw() {
+      var canvas = document.getElementById('bricksCanvas');
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      ctx.fillStyle = '#1565c0';
+      ctx.fillRect(0, 0, BRICKS_W, BRICKS_H);
+
+      for (var i = 0; i < bricksBricks.length; i++) {
+        var b = bricksBricks[i];
+        if (!b.alive) continue;
+        var row = Math.floor((b.y - 40) / (BRICK_H + BRICK_PAD));
+        var hue = 30 + row * 25;
+        ctx.fillStyle = 'hsl(' + hue + ', 70%, 50%)';
+        ctx.fillRect(b.x, b.y, b.w, b.h);
+        ctx.strokeStyle = 'rgba(0,0,0,0.3)';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(b.x, b.y, b.w, b.h);
+      }
+
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(bricksPaddle.x, bricksPaddle.y, bricksPaddle.w, bricksPaddle.h);
+      ctx.strokeStyle = '#e0e0e0';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(bricksPaddle.x, bricksPaddle.y, bricksPaddle.w, bricksPaddle.h);
+
+      ctx.fillStyle = '#ffeb3b';
+      ctx.beginPath();
+      ctx.arc(bricksBall.x, bricksBall.y, bricksBall.r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#f9a825';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+
+    var bricksLastTime = performance.now();
+    function bricksLoop(now) {
+      if (document.getElementById('bricksScreen').classList.contains('active')) {
+        var dt = Math.min(now - bricksLastTime, 50);
+        bricksLastTime = now;
+        bricksUpdate(dt);
+        bricksDraw();
+      }
+      requestAnimationFrame(bricksLoop);
+    }
+    document.addEventListener('keydown', function(e) {
+      if (!document.getElementById('bricksScreen').classList.contains('active')) return;
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') { bricksKeys.left = true; e.preventDefault(); }
+      if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') { bricksKeys.right = true; e.preventDefault(); }
+    });
+    document.addEventListener('keyup', function(e) {
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') bricksKeys.left = false;
+      if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') bricksKeys.right = false;
+    });
+    var bricksCan = document.getElementById('bricksCanvas');
+    if (bricksCan) {
+      bricksCan.addEventListener('mousemove', function(e) {
+        if (bricksGameOver || bricksWon) return;
+        var rect = bricksCan.getBoundingClientRect();
+        var scaleX = bricksCan.width / rect.width;
+        bricksPaddle.x = (e.clientX - rect.left) * scaleX - bricksPaddle.w / 2;
+        bricksPaddle.x = Math.max(0, Math.min(BRICKS_W - bricksPaddle.w, bricksPaddle.x));
+      });
+    }
+    (function startBricksLoop() {
+      if (document.getElementById('bricksScreen')) requestAnimationFrame(bricksLoop);
+    })();
+    var bricksRestartBtn = document.getElementById('bricksRestartBtn');
+    if (bricksRestartBtn) bricksRestartBtn.addEventListener('click', initBricks);
+
+    // === LOVCE DECHŮ ===
+    var GHOST_W = 480, GHOST_H = 400;
+    var ghostPlayer = { x: GHOST_W / 2, y: GHOST_H / 2, r: 20, speed: 3 };
+    var ghostGhosts = [];
+    var ghostScore = 0;
+    var ghostWon = false;
+    var ghostKeys = { up: false, down: false, left: false, right: false };
+    var ghostSpawnT = 0;
+
+    function initGhost() {
+      ghostPlayer.x = GHOST_W / 2;
+      ghostPlayer.y = GHOST_H / 2;
+      ghostGhosts = [];
+      ghostScore = 0;
+      ghostWon = false;
+      ghostSpawnT = 0;
+      ghostLastT = performance.now();
+      document.getElementById('ghostScore').textContent = '0';
+      document.getElementById('ghostOverlay').classList.remove('show');
+    }
+
+    function ghostUpdate(dt) {
+      if (ghostWon) return;
+      var dx = 0, dy = 0;
+      if (ghostKeys.up) dy -= 1;
+      if (ghostKeys.down) dy += 1;
+      if (ghostKeys.left) dx -= 1;
+      if (ghostKeys.right) dx += 1;
+      if (dx !== 0 || dy !== 0) {
+        var len = Math.sqrt(dx * dx + dy * dy);
+        dx /= len; dy /= len;
+        ghostPlayer.x += dx * ghostPlayer.speed * (dt / 16);
+        ghostPlayer.y += dy * ghostPlayer.speed * (dt / 16);
+      }
+      ghostPlayer.x = Math.max(ghostPlayer.r, Math.min(GHOST_W - ghostPlayer.r, ghostPlayer.x));
+      ghostPlayer.y = Math.max(ghostPlayer.r, Math.min(GHOST_H - ghostPlayer.r, ghostPlayer.y));
+
+      ghostSpawnT += dt;
+      if (ghostSpawnT > 1500) {
+        ghostSpawnT = 0;
+        ghostGhosts.push({
+          x: 30 + Math.random() * (GHOST_W - 60),
+          y: 30 + Math.random() * (GHOST_H - 60),
+          r: 18,
+          vx: (Math.random() - 0.5) * 2,
+          vy: (Math.random() - 0.5) * 2
+        });
+      }
+      for (var i = 0; i < ghostGhosts.length; i++) {
+        var g = ghostGhosts[i];
+        g.x += g.vx * (dt / 16);
+        g.y += g.vy * (dt / 16);
+        if (g.x < g.r || g.x > GHOST_W - g.r) g.vx = -g.vx;
+        if (g.y < g.r || g.y > GHOST_H - g.r) g.vy = -g.vy;
+      }
+      document.getElementById('ghostScore').textContent = ghostScore;
+    }
+
+    function ghostCatch(x, y) {
+      if (ghostWon) return;
+      for (var i = ghostGhosts.length - 1; i >= 0; i--) {
+        var g = ghostGhosts[i];
+        if (Math.hypot(x - g.x, y - g.y) < g.r + ghostPlayer.r) {
+          ghostGhosts.splice(i, 1);
+          ghostScore++;
+          if (window.Sound && window.Sound.collect) window.Sound.collect();
+          if (ghostScore >= 15) {
+            ghostWon = true;
+            document.getElementById('ghostOverlayMsg').textContent = 'Výhra! Chytil jsi 15 duchů!';
+            document.getElementById('ghostOverlay').classList.add('show');
+            if (window.Sound && window.Sound.win) window.Sound.win();
+          }
+          return;
+        }
+      }
+    }
+
+    function ghostDraw() {
+      var c = document.getElementById('ghostCanvas');
+      if (!c) return;
+      var ctx = c.getContext('2d');
+      if (!ctx) return;
+      ctx.fillStyle = '#1a0a2e';
+      ctx.fillRect(0, 0, GHOST_W, GHOST_H);
+      ctx.strokeStyle = 'rgba(100,80,150,0.3)';
+      ctx.lineWidth = 1;
+      for (var i = 0; i < 8; i++) {
+        ctx.beginPath();
+        ctx.moveTo(0, 80 + i * 45);
+        ctx.lineTo(GHOST_W, 70 + i * 48);
+        ctx.stroke();
+      }
+
+      function drawGhost(x, y, r) {
+        var h = r * 2.2;
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.beginPath();
+        ctx.ellipse(0, -r * 0.5, r * 0.95, r * 1.1, 0, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(255,255,255,0.92)';
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(220,220,255,0.6)';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(-r * 0.9, r * 0.4);
+        ctx.quadraticCurveTo(-r * 1.1, r * 1.2, -r * 0.5, r * 1.8);
+        ctx.quadraticCurveTo(0, r * 1.5, r * 0.5, r * 1.8);
+        ctx.quadraticCurveTo(r * 1.1, r * 1.2, r * 0.9, r * 0.4);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = '#2c1810';
+        var wink = Math.floor((x + y) / 30) % 2;
+        ctx.beginPath();
+        ctx.arc(-r * 0.35, -r * 0.4, r * 0.22, 0, Math.PI * 2);
+        ctx.fill();
+        if (wink) {
+          ctx.strokeStyle = '#2c1810';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.moveTo(-r * 0.13 - r * 0.22, -r * 0.4);
+          ctx.lineTo(-r * 0.13 + r * 0.22, -r * 0.4);
+          ctx.stroke();
+        } else {
+          ctx.beginPath();
+          ctx.arc(r * 0.35, -r * 0.4, r * 0.2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.beginPath();
+        ctx.arc(0, r * 0.05, r * 0.15, 0, Math.PI);
+        ctx.strokeStyle = '#2c1810';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        ctx.restore();
+      }
+
+      for (var i = 0; i < ghostGhosts.length; i++) {
+        drawGhost(ghostGhosts[i].x, ghostGhosts[i].y, ghostGhosts[i].r);
+      }
+
+      var px = ghostPlayer.x, py = ghostPlayer.y, pr = ghostPlayer.r;
+      ctx.save();
+      ctx.translate(px, py);
+      ctx.fillStyle = '#ffdb9e';
+      ctx.beginPath();
+      ctx.arc(0, -pr * 0.3, pr * 0.85, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#c4956a';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.fillStyle = '#5d4037';
+      ctx.beginPath();
+      ctx.arc(-pr * 0.28, -pr * 0.45, pr * 0.18, 0, Math.PI * 2);
+      ctx.arc(pr * 0.28, -pr * 0.45, pr * 0.18, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      ctx.arc(-pr * 0.25, -pr * 0.5, pr * 0.06, 0, Math.PI * 2);
+      ctx.arc(pr * 0.31, -pr * 0.5, pr * 0.06, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#37474f';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.moveTo(-pr * 0.5, pr * 0.1);
+      ctx.lineTo(pr * 0.5, pr * 0.1);
+      ctx.stroke();
+      ctx.fillStyle = '#4a3728';
+      ctx.fillRect(-pr * 1.05, pr * 0.35, pr * 0.5, pr * 0.9);
+      ctx.fillRect(pr * 0.55, pr * 0.35, pr * 0.5, pr * 0.9);
+      ctx.fillStyle = '#6d4c41';
+      ctx.fillRect(-pr * 0.7, pr * 0.2, pr * 1.4, pr * 0.5);
+      ctx.strokeRect(-pr * 0.7, pr * 0.2, pr * 1.4, pr * 0.5);
+      ctx.fillStyle = '#8d6e63';
+      ctx.beginPath();
+      ctx.arc(pr * 0.9, -pr * 0.5, pr * 0.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#5d4037';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.fillStyle = '#37474f';
+      ctx.fillRect(pr * 0.65, -pr * 0.9, pr * 0.12, pr * 0.55);
+      ctx.fillRect(pr * 1.02, -pr * 0.95, pr * 0.08, pr * 0.5);
+      ctx.restore();
+    }
+
+    var ghostLastT = performance.now();
+    function ghostLoop(now) {
+      if (document.getElementById('ghostScreen').classList.contains('active')) {
+        var dt = Math.min(now - ghostLastT, 50);
+        ghostLastT = now;
+        ghostUpdate(dt);
+        ghostDraw();
+      }
+      requestAnimationFrame(ghostLoop);
+    }
+    document.addEventListener('keydown', function(e) {
+      if (!document.getElementById('ghostScreen').classList.contains('active')) return;
+      if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') { ghostKeys.up = true; e.preventDefault(); }
+      if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') { ghostKeys.down = true; e.preventDefault(); }
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') { ghostKeys.left = true; e.preventDefault(); }
+      if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') { ghostKeys.right = true; e.preventDefault(); }
+      if (e.key === ' ') { ghostCatch(ghostPlayer.x, ghostPlayer.y); e.preventDefault(); }
+    });
+    document.addEventListener('keyup', function(e) {
+      if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') ghostKeys.up = false;
+      if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') ghostKeys.down = false;
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') ghostKeys.left = false;
+      if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') ghostKeys.right = false;
+    });
+    var ghostCan = document.getElementById('ghostCanvas');
+    if (ghostCan) ghostCan.addEventListener('click', function(e) {
+      var rect = ghostCan.getBoundingClientRect();
+      var scaleX = ghostCan.width / rect.width, scaleY = ghostCan.height / rect.height;
+      ghostCatch((e.clientX - rect.left) * scaleX, (e.clientY - rect.top) * scaleY);
+    });
+    if (document.getElementById('ghostScreen')) requestAnimationFrame(ghostLoop);
+    if (document.getElementById('ghostRestartBtn')) document.getElementById('ghostRestartBtn').addEventListener('click', initGhost);
+
+    // === PONG ===
+    var PONG_W = 500, PONG_H = 380;
+    var pongPaddle1 = { x: 20, y: PONG_H / 2 - 35, w: 12, h: 70, vy: 0 };
+    var pongPaddle2 = { x: PONG_W - 32, y: PONG_H / 2 - 35, w: 12, h: 70, vy: 0 };
+    var pongBall = { x: PONG_W / 2, y: PONG_H / 2, vx: 5, vy: 2, r: 8 };
+    var pongScore1 = 0, pongScore2 = 0;
+    var pongGameOver = false;
+    var pongKeys = { up: false, down: false };
+    var pongKeys2 = { up: false, down: false };
+    var pongVsHuman = false;
+
+    function pongSetMode(vsHuman) {
+      pongVsHuman = vsHuman;
+      var el = document.getElementById('pongRightLabel');
+      if (el) el.textContent = vsHuman ? 'Hráč 2' : 'Počítač';
+      var r = document.getElementById('pongBtnRobot');
+      var h = document.getElementById('pongBtnHuman');
+      if (r && h) {
+        r.style.opacity = vsHuman ? '0.7' : '1';
+        h.style.opacity = vsHuman ? '1' : '0.7';
+      }
+    }
+
+    function initPong() {
+      pongPaddle1.y = PONG_H / 2 - pongPaddle1.h / 2;
+      pongPaddle2.y = PONG_H / 2 - pongPaddle2.h / 2;
+      pongBall.x = PONG_W / 2;
+      pongBall.y = PONG_H / 2;
+      pongBall.vx = 5;
+      pongBall.vy = 2;
+      pongScore1 = 0;
+      pongScore2 = 0;
+      pongGameOver = false;
+      pongLastT = performance.now();
+      document.getElementById('pongPlayerScore').textContent = '0';
+      document.getElementById('pongAiScore').textContent = '0';
+      document.getElementById('pongOverlay').classList.remove('show');
+      pongSetMode(pongVsHuman);
+    }
+
+    function pongUpdate(dt) {
+      if (pongGameOver) return;
+      var scale = dt / 16;
+      if (pongKeys.up) pongPaddle1.y = Math.max(0, pongPaddle1.y - 8 * scale);
+      if (pongKeys.down) pongPaddle1.y = Math.min(PONG_H - pongPaddle1.h, pongPaddle1.y + 8 * scale);
+
+      if (pongVsHuman) {
+        if (pongKeys2.up) pongPaddle2.y = Math.max(0, pongPaddle2.y - 8 * scale);
+        if (pongKeys2.down) pongPaddle2.y = Math.min(PONG_H - pongPaddle2.h, pongPaddle2.y + 8 * scale);
+      } else {
+        var aiCenter = pongPaddle2.y + pongPaddle2.h / 2;
+        if (pongBall.y < aiCenter - 10) pongPaddle2.y = Math.max(0, pongPaddle2.y - 5 * scale);
+        else if (pongBall.y > aiCenter + 10) pongPaddle2.y = Math.min(PONG_H - pongPaddle2.h, pongPaddle2.y + 5 * scale);
+      }
+
+      pongBall.x += pongBall.vx * scale;
+      pongBall.y += pongBall.vy * scale;
+
+      if (pongBall.y - pongBall.r < 0) { pongBall.y = pongBall.r; pongBall.vy = -pongBall.vy; }
+      if (pongBall.y + pongBall.r > PONG_H) { pongBall.y = PONG_H - pongBall.r; pongBall.vy = -pongBall.vy; }
+
+      if (pongBall.x - pongBall.r < pongPaddle1.x + pongPaddle1.w && pongBall.x > pongPaddle1.x &&
+          pongBall.y + pongBall.r > pongPaddle1.y && pongBall.y - pongBall.r < pongPaddle1.y + pongPaddle1.h) {
+        pongBall.vx = Math.abs(pongBall.vx);
+        pongBall.vy = (pongBall.y - (pongPaddle1.y + pongPaddle1.h / 2)) / 20;
+      }
+      if (pongBall.x + pongBall.r > pongPaddle2.x && pongBall.x < pongPaddle2.x + pongPaddle2.w &&
+          pongBall.y + pongBall.r > pongPaddle2.y && pongBall.y - pongBall.r < pongPaddle2.y + pongPaddle2.h) {
+        pongBall.vx = -Math.abs(pongBall.vx);
+        pongBall.vy = (pongBall.y - (pongPaddle2.y + pongPaddle2.h / 2)) / 20;
+      }
+
+      if (pongBall.x - pongBall.r < 0) {
+        pongScore2++;
+        document.getElementById('pongAiScore').textContent = pongScore2;
+        if (pongScore2 >= 5) {
+          pongGameOver = true;
+          var msg = pongVsHuman ? ('Hráč 2 vyhrál ' + pongScore2 + ' : ' + pongScore1) : ('Prohra! Počítač vyhrál ' + pongScore2 + ' : ' + pongScore1);
+          document.getElementById('pongOverlayMsg').textContent = msg;
+          document.getElementById('pongOverlay').classList.add('show');
+          if (window.Sound && window.Sound.gameOver) window.Sound.gameOver();
+        } else {
+          pongBall.x = PONG_W / 2;
+          pongBall.y = PONG_H / 2;
+          pongBall.vx = -5;
+          pongBall.vy = 2;
+        }
+      }
+      if (pongBall.x + pongBall.r > PONG_W) {
+        pongScore1++;
+        document.getElementById('pongPlayerScore').textContent = pongScore1;
+        if (pongScore1 >= 5) {
+          pongGameOver = true;
+          var msgWin = pongVsHuman ? ('Hráč 1 (levý) vyhrál ' + pongScore1 + ' : ' + pongScore2) : ('Výhra! Ty ' + pongScore1 + ' : ' + pongScore2);
+          document.getElementById('pongOverlayMsg').textContent = msgWin;
+          document.getElementById('pongOverlay').classList.add('show');
+          if (window.Sound && window.Sound.win) window.Sound.win();
+        } else {
+          pongBall.x = PONG_W / 2;
+          pongBall.y = PONG_H / 2;
+          pongBall.vx = 5;
+          pongBall.vy = 2;
+        }
+      }
+    }
+
+    function pongDraw() {
+      var c = document.getElementById('pongCanvas');
+      if (!c) return;
+      var ctx = c.getContext('2d');
+      if (!ctx) return;
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, PONG_W, PONG_H);
+      ctx.setLineDash([8, 8]);
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(PONG_W / 2, 0);
+      ctx.lineTo(PONG_W / 2, PONG_H);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(pongPaddle1.x, pongPaddle1.y, pongPaddle1.w, pongPaddle1.h);
+      ctx.fillRect(pongPaddle2.x, pongPaddle2.y, pongPaddle2.w, pongPaddle2.h);
+      ctx.beginPath();
+      ctx.arc(pongBall.x, pongBall.y, pongBall.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    var pongLastT = performance.now();
+    function pongLoop(now) {
+      if (document.getElementById('pongScreen').classList.contains('active')) {
+        var dt = Math.min(now - pongLastT, 50);
+        pongLastT = now;
+        pongUpdate(dt);
+        pongDraw();
+      }
+      requestAnimationFrame(pongLoop);
+    }
+    document.addEventListener('keydown', function(e) {
+      if (!document.getElementById('pongScreen').classList.contains('active')) return;
+      if (e.key === 'w' || e.key === 'W') { pongKeys.up = true; e.preventDefault(); }
+      if (e.key === 's' || e.key === 'S') { pongKeys.down = true; e.preventDefault(); }
+      if (e.key === 'ArrowUp') { pongKeys2.up = true; e.preventDefault(); }
+      if (e.key === 'ArrowDown') { pongKeys2.down = true; e.preventDefault(); }
+    });
+    document.addEventListener('keyup', function(e) {
+      if (e.key === 'w' || e.key === 'W') pongKeys.up = false;
+      if (e.key === 's' || e.key === 'S') pongKeys.down = false;
+      if (e.key === 'ArrowUp') pongKeys2.up = false;
+      if (e.key === 'ArrowDown') pongKeys2.down = false;
+    });
+    if (document.getElementById('pongScreen')) requestAnimationFrame(pongLoop);
+    if (document.getElementById('pongRestartBtn')) document.getElementById('pongRestartBtn').addEventListener('click', initPong);
+
+    // === VYHÝBAČKA ===
+    var DODGER_W = 400, DODGER_H = 450;
+    var dodgerPlayer = { x: DODGER_W / 2 - 25, y: DODGER_H - 50, w: 50, h: 40 };
+    var dodgerObstacles = [];
+    var dodgerScore = 0;
+    var dodgerStartTime = 0;
+    var dodgerGameOver = false;
+    var dodgerKeys = { left: false, right: false };
+    var dodgerSpawnT = 0;
+
+    function initDodger() {
+      dodgerPlayer.x = DODGER_W / 2 - dodgerPlayer.w / 2;
+      dodgerObstacles = [];
+      dodgerScore = 0;
+      dodgerStartTime = performance.now();
+      dodgerGameOver = false;
+      dodgerSpawnT = 0;
+      dodgerLastT = performance.now();
+      document.getElementById('dodgerScore').textContent = '0';
+      document.getElementById('dodgerOverlay').classList.remove('show');
+    }
+
+    function dodgerUpdate(dt) {
+      if (dodgerGameOver) return;
+      dodgerScore = Math.floor((performance.now() - dodgerStartTime) / 1000);
+      document.getElementById('dodgerScore').textContent = dodgerScore;
+
+      if (dodgerKeys.left) dodgerPlayer.x = Math.max(0, dodgerPlayer.x - 6 * (dt / 16));
+      if (dodgerKeys.right) dodgerPlayer.x = Math.min(DODGER_W - dodgerPlayer.w, dodgerPlayer.x + 6 * (dt / 16));
+
+      dodgerSpawnT += dt;
+      if (dodgerSpawnT > 600) {
+        dodgerSpawnT = 0;
+        dodgerObstacles.push({
+          x: Math.random() * (DODGER_W - 40),
+          y: -30,
+          w: 30 + Math.random() * 30,
+          h: 24,
+          vy: 3 + Math.random() * 2
+        });
+      }
+
+      for (var i = dodgerObstacles.length - 1; i >= 0; i--) {
+        var o = dodgerObstacles[i];
+        o.y += o.vy * (dt / 16);
+        if (o.y > DODGER_H) { dodgerObstacles.splice(i, 1); continue; }
+        if (dodgerPlayer.x + dodgerPlayer.w > o.x && dodgerPlayer.x < o.x + o.w &&
+            dodgerPlayer.y + dodgerPlayer.h > o.y && dodgerPlayer.y < o.y + o.h) {
+          dodgerGameOver = true;
+          document.getElementById('dodgerOverlayMsg').textContent = 'Konec! Score: ' + dodgerScore + ' s';
+          document.getElementById('dodgerOverlay').classList.add('show');
+          if (window.Sound && window.Sound.gameOver) window.Sound.gameOver();
+        }
+      }
+    }
+
+    function dodgerDraw() {
+      var c = document.getElementById('dodgerCanvas');
+      if (!c) return;
+      var ctx = c.getContext('2d');
+      if (!ctx) return;
+      ctx.fillStyle = '#37474f';
+      ctx.fillRect(0, 0, DODGER_W, DODGER_H);
+      for (var i = 0; i < dodgerObstacles.length; i++) {
+        var o = dodgerObstacles[i];
+        ctx.fillStyle = '#ff5722';
+        ctx.fillRect(o.x, o.y, o.w, o.h);
+        ctx.strokeStyle = '#e64a19';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(o.x, o.y, o.w, o.h);
+      }
+      ctx.fillStyle = '#4caf50';
+      ctx.fillRect(dodgerPlayer.x, dodgerPlayer.y, dodgerPlayer.w, dodgerPlayer.h);
+      ctx.strokeStyle = '#2e7d32';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(dodgerPlayer.x, dodgerPlayer.y, dodgerPlayer.w, dodgerPlayer.h);
+    }
+
+    var dodgerLastT = performance.now();
+    function dodgerLoop(now) {
+      if (document.getElementById('dodgerScreen').classList.contains('active')) {
+        var dt = Math.min(now - dodgerLastT, 50);
+        dodgerLastT = now;
+        dodgerUpdate(dt);
+        dodgerDraw();
+      }
+      requestAnimationFrame(dodgerLoop);
+    }
+    document.addEventListener('keydown', function(e) {
+      if (!document.getElementById('dodgerScreen').classList.contains('active')) return;
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') { dodgerKeys.left = true; e.preventDefault(); }
+      if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') { dodgerKeys.right = true; e.preventDefault(); }
+    });
+    document.addEventListener('keyup', function(e) {
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') dodgerKeys.left = false;
+      if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') dodgerKeys.right = false;
+    });
+    if (document.getElementById('dodgerScreen')) requestAnimationFrame(dodgerLoop);
+    if (document.getElementById('dodgerRestartBtn')) document.getElementById('dodgerRestartBtn').addEventListener('click', initDodger);
+
+    // === GEOMETRY DASH ===
+    const gdCanvas = document.getElementById('gdCanvas');
+    const gdCtx = gdCanvas.getContext('2d');
+    const GD_W = 600, GD_H = 400;
+    const GROUND_Y = GD_H - 50;
+    const PLAYER_X = 100;
+    const PLAYER_SIZE = 32;
+    const GRAVITY_GD = 0.7;
+    const JUMP_GD = -11;
+    const SCROLL_SPEED = 6;
+    let gdPlayerY = GROUND_Y - PLAYER_SIZE;
+    let gdVy = 0;
+    let gdObstacles = [];
+    let gdScroll = 0;
+    let gdNextSpawn = 400;
+    let gdGameOver = false;
+    let gdScore = 0;
+    let gdLastTime = performance.now();
+
+    function gdTodayKey() {
+      var d = new Date();
+      return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+    }
+    function gdLoadBest() {
+      try {
+        var key = gdTodayKey();
+        var saved = localStorage.getItem('gdBest_' + key);
+        if (saved) {
+          var n = parseInt(saved, 10);
+          if (!isNaN(n)) {
+            var el = document.getElementById('gdBestScore');
+            if (el) el.textContent = n;
+            return n;
+          }
+        }
+      } catch (e) {}
+      var el = document.getElementById('gdBestScore');
+      if (el) el.textContent = '0';
+      return 0;
+    }
+    function gdSaveBest() {
+      try {
+        var key = gdTodayKey();
+        var cur = gdScore || 0;
+        var saved = localStorage.getItem('gdBest_' + key);
+        var best = saved ? Math.max(cur, parseInt(saved, 10)) : cur;
+        if (cur >= best) {
+          localStorage.setItem('gdBest_' + key, String(best));
+          var el = document.getElementById('gdBestScore');
+          if (el) el.textContent = best;
+        }
+      } catch (e) {}
+    }
+
+    // --- Komiksy (3 kreslené komiksy) ---
+    function initComicOnly() {
+      showComicOnly(1);
+    }
+    function showComicOnly(num) {
+      var c = document.getElementById('comicOnlyCanvas');
+      if (!c) return;
+      var ctx = c.getContext('2d');
+      if (!ctx) return;
+      var W = 640, H = 480;
+      var pw = W / 2, ph = H / 2;
+
+      function panel(x, y, w, h) {
+        ctx.strokeStyle = '#5d4037';
+        ctx.lineWidth = 3;
+        ctx.strokeRect(x + 2, y + 2, w - 4, h - 4);
+        ctx.fillStyle = '#ffecb3';
+        ctx.fillRect(x + 4, y + 4, w - 8, h - 8);
+      }
+      function bubble(x, y, w, h, text) {
+        var lines = text.split('\n');
+        var lineH = 16;
+        var pad = 10;
+        var needH = pad * 2 + lines.length * lineH;
+        if (needH > h) h = needH;
+        ctx.fillStyle = '#fff';
+        ctx.strokeStyle = '#333';
+        ctx.lineWidth = 2;
+        var r = 8;
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.lineTo(x + w - r, y);
+        ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+        ctx.lineTo(x + w, y + h - r);
+        ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+        ctx.lineTo(x + r, y + h);
+        ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+        ctx.lineTo(x, y + r);
+        ctx.quadraticCurveTo(x, y, x + r, y);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = '#333';
+        ctx.font = '14px Nunito, sans-serif';
+        ctx.textAlign = 'center';
+        var startY = y + h / 2 - (lines.length - 1) * (lineH / 2);
+        for (var i = 0; i < lines.length; i++)
+          ctx.fillText(lines[i], x + w / 2, startY + i * lineH);
+      }
+      function person(cx, cy, color) {
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(cx, cy - 22, 18, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#333';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.fillStyle = '#5d4037';
+        ctx.beginPath();
+        ctx.ellipse(cx, cy + 15, 22, 28, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(cx - 22, cy + 35);
+        ctx.lineTo(cx - 35, cy + 55);
+        ctx.moveTo(cx + 22, cy + 35);
+        ctx.lineTo(cx + 35, cy + 55);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(cx - 15, cy - 5);
+        ctx.lineTo(cx - 30, cy + 5);
+        ctx.moveTo(cx + 15, cy - 5);
+        ctx.lineTo(cx + 30, cy + 5);
+        ctx.stroke();
+      }
+      function fridge(x, y, open) {
+        ctx.fillStyle = '#eceff1';
+        ctx.fillRect(x, y, 50, 80);
+        ctx.strokeStyle = '#37474f';
+        ctx.lineWidth = 2;
+        ctx.strokeRect(x, y, 50, 80);
+        if (open) {
+          ctx.fillStyle = '#cfd8dc';
+          ctx.fillRect(x + 5, y + 5, 40, 70);
+          ctx.strokeRect(x + 5, y + 5, 40, 70);
+        }
+      }
+      function olafFace(cx, cy) {
+        ctx.fillStyle = '#ffcc80';
+        ctx.beginPath();
+        ctx.arc(cx, cy - 20, 20, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#5d4037';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.fillStyle = '#5d4037';
+        ctx.beginPath();
+        ctx.arc(cx - 6, cy - 24, 4, 0, Math.PI * 2);
+        ctx.arc(cx + 6, cy - 24, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(cx, cy - 14, 5, 0, Math.PI);
+        ctx.stroke();
+      }
+      function pizza(x, y, slices) {
+        ctx.fillStyle = '#ffb74d';
+        ctx.beginPath();
+        ctx.arc(x, y, 35, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#e65100';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.fillStyle = '#c62828';
+        for (var i = 0; i < slices; i++) {
+          var a = (i / slices) * Math.PI * 2 - Math.PI / 2;
+          ctx.beginPath();
+          ctx.moveTo(x, y);
+          ctx.arc(x, y, 35, a, a + (Math.PI * 2 / slices));
+          ctx.closePath();
+          ctx.fill();
+        }
+      }
+      function squirrel(cx, cy) {
+        ctx.fillStyle = '#8d6e63';
+        ctx.beginPath();
+        ctx.ellipse(cx, cy + 8, 22, 28, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#5d4037';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        ctx.fillStyle = '#a1887f';
+        ctx.beginPath();
+        ctx.arc(cx, cy - 18, 16, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = '#2c1810';
+        ctx.beginPath();
+        ctx.arc(cx - 5, cy - 20, 3, 0, Math.PI * 2);
+        ctx.arc(cx + 5, cy - 20, 3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.ellipse(cx + 18, cy - 5, 12, 10, -0.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      }
+      function nut(x, y) {
+        ctx.fillStyle = '#6d4c41';
+        ctx.beginPath();
+        ctx.ellipse(x, y, 14, 10, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#4e342e';
+        ctx.stroke();
+      }
+
+      ctx.fillStyle = '#fff8e1';
+      ctx.fillRect(0, 0, W, H);
+
+      if (num === 1) {
+        panel(10, 10, pw - 15, ph - 15);
+        person(120, 180, '#ffcc80');
+        bubble(180, 60, 120, 44, 'Už mám hlad.');
+        panel(pw + 5, 10, pw - 15, ph - 15);
+        person(380, 180, '#ffcc80');
+        fridge(480, 120, true);
+        bubble(330, 70, 100, 36, 'Otevřu lednici...');
+        panel(10, ph + 5, pw - 15, ph - 20);
+        person(120, 380, '#ffcc80');
+        ctx.fillStyle = '#b0bec5';
+        ctx.fillRect(320, 280, 80, 100);
+        ctx.strokeRect(320, 280, 80, 100);
+        bubble(180, 260, 130, 40, 'Prázdno?!');
+        panel(pw + 5, ph + 5, pw - 15, ph - 20);
+        ctx.beginPath();
+        ctx.arc(420, 360, 20, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffcc80';
+        ctx.fill();
+        ctx.strokeStyle = '#333';
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.ellipse(420, 395, 25, 32, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(398, 415);
+        ctx.lineTo(370, 450);
+        ctx.moveTo(442, 415);
+        ctx.lineTo(470, 450);
+        ctx.moveTo(395, 368);
+        ctx.lineTo(365, 355);
+        ctx.moveTo(445, 368);
+        ctx.lineTo(475, 355);
+        ctx.stroke();
+        bubble(330, 305, 140, 44, 'Běžím do obchodu!');
+        ctx.fillStyle = '#5d4037';
+        ctx.font = 'bold 16px Nunito, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('Kocour a prázdná lednice', W / 2, 468);
+      } else if (num === 2) {
+        panel(10, 10, pw - 15, ph - 15);
+        olafFace(130, 150);
+        person(130, 220, '#8d6e63');
+        bubble(170, 50, 140, 44, 'Dnes si dám pizzu!');
+        panel(pw + 5, 10, pw - 15, ph - 15);
+        olafFace(400, 150);
+        pizza(480, 180, 6);
+        bubble(330, 70, 120, 36, 'Objednám šestku...');
+        panel(10, ph + 5, pw - 15, ph - 20);
+        olafFace(130, 370);
+        ctx.fillStyle = '#ffcc80';
+        ctx.beginPath();
+        ctx.arc(380, 340, 25, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#5d4037';
+        ctx.stroke();
+        bubble(182, 270, 130, 44, 'Doručovatel? Super!');
+        panel(pw + 5, ph + 5, pw - 15, ph - 20);
+        olafFace(420, 370);
+        ctx.fillStyle = '#ffab91';
+        ctx.beginPath();
+        ctx.arc(420, 350, 28, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#e64a19';
+        ctx.stroke();
+        bubble(330, 310, 165, 50, 'Pizza bez sýra?!\nTo je salám!');
+        ctx.fillStyle = '#5d4037';
+        ctx.font = 'bold 16px Nunito, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('Olaf a pizzový den', W / 2, 468);
+      } else if (num === 3) {
+        panel(10, 10, pw - 15, ph - 15);
+        squirrel(120, 170);
+        bubble(182, 50, 130, 44, 'Našel jsem oříšek!');
+        panel(pw + 5, 10, pw - 15, ph - 15);
+        squirrel(380, 170);
+        nut(480, 200);
+        bubble(330, 70, 120, 36, 'Schovám ho tady.');
+        panel(10, ph + 5, pw - 15, ph - 20);
+        squirrel(120, 380);
+        ctx.fillStyle = '#fff8e1';
+        ctx.beginPath();
+        ctx.arc(400, 320, 30, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#5d4037';
+        ctx.stroke();
+        bubble(172, 260, 140, 44, 'Kde jsem ho dal?');
+        panel(pw + 5, ph + 5, pw - 15, ph - 20);
+        squirrel(420, 380);
+        nut(350, 340);
+        bubble(330, 305, 160, 50, 'Veverka si nepamatuje.\nKlasika.');
+        ctx.fillStyle = '#5d4037';
+        ctx.font = 'bold 16px Nunito, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('Veverka a oříšek', W / 2, 468);
+      }
+    }
+    window.showComicOnly = showComicOnly;
+
+    // --- Komiks a hra (Olaf a jablka) ---
+    var comicBasketX = 200;
+    var comicApples = [];
+    var comicCaught = 0;
+    var comicWon = false;
+    var comicRunning = false;
+    var comicLastSpawn = 0;
+    var comicLastTime = 0;
+    var COMIC_W = 400, COMIC_H = 400;
+    var BASKET_W = 70, BASKET_H = 40;
+    var APPLE_R = 14;
+
+    var STRUDEL_W = 400, STRUDEL_H = 280;
+    var strudelNeedleY = 0;
+    var strudelTime = 0;
+    var strudelLastNow = 0;
+    var strudelCount = 0;
+    var strudelWon = false;
+    var strudelRunning = false;
+    var STRUDEL_GREEN_TOP = 95;
+    var STRUDEL_GREEN_BOT = 185;
+
+    function initComic() {
+      comicBasketX = COMIC_W / 2 - BASKET_W / 2;
+      comicApples = [];
+      comicCaught = 0;
+      comicWon = false;
+      comicRunning = false;
+      var gw = document.getElementById('comicGameWrap');
+      if (gw) gw.classList.remove('show');
+      var ce = document.getElementById('comicCaught');
+      if (ce) ce.textContent = '0';
+      strudelRunning = false;
+      strudelCount = 0;
+      strudelWon = false;
+      var sw = document.getElementById('strudelGameWrap');
+      if (sw) sw.classList.remove('show');
+      var sc = document.getElementById('strudelCount');
+      if (sc) sc.textContent = '0';
+    }
+
+    function startComicGame() {
+      var wrap = document.getElementById('comicGameWrap');
+      var caughtEl = document.getElementById('comicCaught');
+      if (!wrap || !caughtEl) return;
+      wrap.classList.add('show');
+      comicBasketX = COMIC_W / 2 - BASKET_W / 2;
+      comicApples = [];
+      comicCaught = 0;
+      comicWon = false;
+      comicRunning = true;
+      comicLastSpawn = 0;
+      comicLastTime = performance.now();
+      caughtEl.textContent = '0';
+      comicGameLoop(performance.now());
+    }
+    window.startComicGame = startComicGame;
+
+    function comicGameLoop(now) {
+      var comicScreen = document.getElementById('comicScreen');
+      if (!comicScreen || !comicScreen.classList.contains('active')) {
+        comicRunning = false;
+        return;
+      }
+      if (!comicRunning) return;
+      var dt = Math.min(now - comicLastTime, 100);
+      comicLastTime = now;
+      comicUpdate(dt);
+      comicDraw();
+      if (comicWon) {
+        comicRunning = false;
+        if (window.Sound && window.Sound.win) window.Sound.win();
+        return;
+      }
+      requestAnimationFrame(comicGameLoop);
+    }
+
+    function comicUpdate(dt) {
+      if (comicWon) return;
+      comicLastSpawn += dt;
+      if (comicLastSpawn > 800) {
+        comicLastSpawn = 0;
+        comicApples.push({ x: APPLE_R + Math.random() * (COMIC_W - APPLE_R * 2), y: -APPLE_R * 2, vy: 0.22 });
+      }
+      var by = COMIC_H - BASKET_H - 10;
+      for (var i = comicApples.length - 1; i >= 0; i--) {
+        var a = comicApples[i];
+        a.y += a.vy * dt;
+        if (a.y > COMIC_H) {
+          comicApples.splice(i, 1);
+          continue;
+        }
+        if (a.y + APPLE_R > by && a.y - APPLE_R < by + BASKET_H && a.x > comicBasketX && a.x < comicBasketX + BASKET_W) {
+          comicApples.splice(i, 1);
+          comicCaught++;
+          var el = document.getElementById('comicCaught');
+          if (el) el.textContent = comicCaught;
+          if (window.Sound && window.Sound.collect) window.Sound.collect();
+          if (comicCaught >= 10) comicWon = true;
+        }
+      }
+    }
+
+    function comicKeyDown(e) {
+      if (!comicRunning || comicWon) return;
+      if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+        comicBasketX = Math.max(0, comicBasketX - 18);
+        e.preventDefault();
+      }
+      if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+        comicBasketX = Math.min(COMIC_W - BASKET_W, comicBasketX + 18);
+        e.preventDefault();
+      }
+    }
+    document.addEventListener('keydown', function(e) {
+      var key = e.key;
+      if (!document.getElementById('comicScreen').classList.contains('active')) return;
+      if (key === ' ' || key === 'Spacebar') {
+        e.preventDefault();
+        if (strudelRunning && !strudelWon) strudelTakeOut();
+        return;
+      }
+      if (key === 'ArrowLeft' || key === 'ArrowRight' || key === 'a' || key === 'A' || key === 'd' || key === 'D') comicKeyDown(e);
+    });
+
+    function comicDraw() {
+      var canvas = document.getElementById('comicCanvas');
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      ctx.fillStyle = '#1b5e20';
+      ctx.fillRect(0, 0, COMIC_W, COMIC_H);
+      ctx.fillStyle = '#388e3c';
+      for (var i = 0; i < 5; i++) ctx.fillRect(0, COMIC_H - 20 - i * 8, COMIC_W, 6);
+      ctx.fillStyle = '#8d6e63';
+      ctx.fillRect(comicBasketX, COMIC_H - BASKET_H - 10, BASKET_W, BASKET_H);
+      ctx.strokeStyle = '#5d4037';
+      ctx.lineWidth = 3;
+      ctx.strokeRect(comicBasketX, COMIC_H - BASKET_H - 10, BASKET_W, BASKET_H);
+      ctx.fillStyle = '#c62828';
+      for (var i = 0; i < comicApples.length; i++) {
+        var a = comicApples[i];
+        ctx.beginPath();
+        ctx.arc(a.x, a.y, APPLE_R, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = '#2e7d32';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+      if (comicWon) {
+        ctx.fillStyle = 'rgba(0,0,0,0.6)';
+        ctx.fillRect(0, 0, COMIC_W, COMIC_H);
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 28px Nunito, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('Výhra! Chytil jsi 10 jablek!', COMIC_W / 2, COMIC_H / 2 - 10);
+        ctx.font = '18px Nunito, sans-serif';
+        ctx.fillText('Olaf je nadšený.', COMIC_W / 2, COMIC_H / 2 + 25);
+      }
+    }
+
+    function startStrudelGame() {
+      var wrap = document.getElementById('strudelGameWrap');
+      var countEl = document.getElementById('strudelCount');
+      if (!wrap || !countEl) return;
+      wrap.classList.add('show');
+      strudelCount = 0;
+      strudelWon = false;
+      strudelRunning = true;
+      strudelTime = 0;
+      strudelNeedleY = 140;
+      strudelLastNow = performance.now();
+      countEl.textContent = '0';
+      strudelGameLoop(performance.now());
+    }
+    window.startStrudelGame = startStrudelGame;
+
+    function strudelGameLoop(now) {
+      var comicScreen = document.getElementById('comicScreen');
+      if (!comicScreen || !comicScreen.classList.contains('active')) {
+        strudelRunning = false;
+        return;
+      }
+      if (!strudelRunning) return;
+      var dt = Math.min(now - strudelLastNow, 50);
+      strudelLastNow = now;
+      strudelTime += dt / 1000;
+      strudelUpdate();
+      strudelDraw();
+      if (strudelWon) {
+        strudelRunning = false;
+        if (window.Sound && window.Sound.win) window.Sound.win();
+        return;
+      }
+      requestAnimationFrame(strudelGameLoop);
+    }
+
+    function strudelUpdate() {
+      var center = 140;
+      var amp = 55;
+      strudelNeedleY = center + amp * Math.sin(strudelTime * 2.2);
+    }
+
+    function strudelTakeOut() {
+      if (!strudelRunning || strudelWon) return;
+      if (strudelNeedleY >= STRUDEL_GREEN_TOP && strudelNeedleY <= STRUDEL_GREEN_BOT) {
+        strudelCount++;
+        var el = document.getElementById('strudelCount');
+        if (el) el.textContent = strudelCount;
+        if (window.Sound && window.Sound.collect) window.Sound.collect();
+        if (strudelCount >= 3) strudelWon = true;
+      }
+    }
+
+    function strudelDraw() {
+      var canvas = document.getElementById('strudelCanvas');
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+      if (!ctx) return;
+      ctx.fillStyle = '#4e342e';
+      ctx.fillRect(0, 0, STRUDEL_W, STRUDEL_H);
+      ctx.fillStyle = '#3e2723';
+      ctx.fillRect(40, 40, STRUDEL_W - 80, STRUDEL_H - 80);
+      ctx.strokeStyle = '#5d4037';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(40, 40, STRUDEL_W - 80, STRUDEL_H - 80);
+      ctx.fillStyle = '#ff8a65';
+      ctx.font = 'bold 20px Nunito, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Trouba – štrůdl peče', STRUDEL_W / 2, 28);
+      var thermX = STRUDEL_W - 70;
+      ctx.fillStyle = '#fff';
+      ctx.fillRect(thermX - 8, 55, 24, 210);
+      ctx.strokeStyle = '#37474f';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(thermX - 8, 55, 24, 210);
+      ctx.fillStyle = 'rgba(76, 175, 80, 0.4)';
+      ctx.fillRect(thermX - 6, STRUDEL_GREEN_TOP, 20, STRUDEL_GREEN_BOT - STRUDEL_GREEN_TOP);
+      ctx.fillStyle = '#c62828';
+      ctx.beginPath();
+      ctx.arc(thermX + 4, strudelNeedleY, 8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#fff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      ctx.fillStyle = '#5d4037';
+      ctx.font = '14px Nunito, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText('zelená = vyndat!', thermX - 75, 150);
+      if (strudelWon) {
+        ctx.fillStyle = 'rgba(0,0,0,0.65)';
+        ctx.fillRect(0, 0, STRUDEL_W, STRUDEL_H);
+        ctx.fillStyle = '#fff';
+        ctx.font = 'bold 26px Nunito, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('Výborně! Tři štrůdly hotové!', STRUDEL_W / 2, STRUDEL_H / 2 - 15);
+        ctx.font = '18px Nunito, sans-serif';
+        ctx.fillText('Olaf má radost. 🥧', STRUDEL_W / 2, STRUDEL_H / 2 + 25);
+      }
+    }
+
+    function initGD() {
+      gdPlayerY = GROUND_Y - PLAYER_SIZE;
+      gdVy = 0;
+      gdObstacles = [];
+      gdScroll = 0;
+      gdNextSpawn = 150;
+      gdGameOver = false;
+      gdScore = 0;
+      gdLastTime = performance.now();
+      document.getElementById('gdScore').textContent = 0;
+      gdLoadBest();
+    }
+
+    function spawnGDObstacle() {
+      const type = Math.random() < 0.5 ? 'spike' : 'block';
+      gdObstacles.push({
+        x: GD_W + 20,
+        type: type,
+        h: type === 'spike' ? 30 : (20 + Math.random() * 15),
+        w: type === 'spike' ? 24 : 28
+      });
+      gdNextSpawn = gdScroll + 160 + Math.random() * 200;
+    }
+
+    function gdUpdate(dt) {
+      if (gdGameOver) return;
+      dt = Math.min(dt, 200);
+      const dtNorm = dt / 16;
+      gdScroll += SCROLL_SPEED * dtNorm;
+      gdScore = Math.floor(gdScroll / 5);
+      document.getElementById('gdScore').textContent = gdScore;
+      gdSaveBest();
+
+      gdVy += GRAVITY_GD * dtNorm;
+      gdPlayerY += gdVy * dtNorm;
+      if (gdPlayerY >= GROUND_Y - PLAYER_SIZE) {
+        gdPlayerY = GROUND_Y - PLAYER_SIZE;
+        gdVy = 0;
+      }
+
+      gdObstacles.forEach(function(o) { o.x -= SCROLL_SPEED * dtNorm; });
+      gdObstacles = gdObstacles.filter(function(o) { return o.x > -60; });
+
+      if (gdScroll >= gdNextSpawn) spawnGDObstacle();
+
+      gdObstacles.forEach(function(o) {
+        const px = PLAYER_X, py = gdPlayerY, ps = PLAYER_SIZE;
+        if (o.x + o.w < px || o.x > px + ps) return;
+        if (o.type === 'spike') {
+          const spikeTop = GROUND_Y - o.h;
+          if (py + ps > spikeTop && py < GROUND_Y && px + ps > o.x && px < o.x + o.w) { gdGameOver = true; gdSaveBest(); }
+        } else {
+          const blockTop = GROUND_Y - o.h;
+          const feet = py + ps;
+          if (gdVy >= 0) {
+            if (feet >= blockTop - 5 && feet <= blockTop + 40) {
+              gdPlayerY = blockTop - ps;
+              gdVy = 0;
+            }
+          } else {
+            if (py + ps > blockTop + 8) { gdGameOver = true; gdSaveBest(); }
+          }
+        }
+      });
+    }
+
+    function gdDraw() {
+      gdCtx.fillStyle = '#0a0a12';
+      gdCtx.fillRect(0, 0, GD_W, GD_H);
+      for (let i = 0; i < GD_H; i += 20) {
+        gdCtx.strokeStyle = 'rgba(0,188,212,0.15)';
+        gdCtx.beginPath();
+        gdCtx.moveTo(0, i);
+        gdCtx.lineTo(GD_W, i);
+        gdCtx.stroke();
+      }
+      gdCtx.fillStyle = '#1a1a2e';
+      gdCtx.fillRect(0, GROUND_Y, GD_W, GD_H - GROUND_Y);
+      gdCtx.strokeStyle = '#00bcd4';
+      gdCtx.lineWidth = 3;
+      gdCtx.strokeRect(0, GROUND_Y, GD_W, GD_H - GROUND_Y);
+
+      gdObstacles.forEach(function(o) {
+        if (o.type === 'spike') {
+          gdCtx.fillStyle = '#e91e63';
+          gdCtx.strokeStyle = '#ff4081';
+          gdCtx.lineWidth = 2;
+          gdCtx.beginPath();
+          gdCtx.moveTo(o.x, GROUND_Y);
+          gdCtx.lineTo(o.x + o.w / 2, GROUND_Y - o.h);
+          gdCtx.lineTo(o.x + o.w, GROUND_Y);
+          gdCtx.closePath();
+          gdCtx.fill();
+          gdCtx.stroke();
+        } else {
+          gdCtx.fillStyle = '#9acd32';
+          gdCtx.strokeStyle = '#adff2f';
+          gdCtx.lineWidth = 2;
+          gdCtx.fillRect(o.x, GROUND_Y - o.h, o.w, o.h);
+          gdCtx.strokeRect(o.x, GROUND_Y - o.h, o.w, o.h);
+        }
+      });
+
+      gdCtx.fillStyle = '#00e5ff';
+      gdCtx.fillRect(PLAYER_X, gdPlayerY, PLAYER_SIZE, PLAYER_SIZE);
+      gdCtx.strokeStyle = '#00bcd4';
+      gdCtx.lineWidth = 3;
+      gdCtx.strokeRect(PLAYER_X, gdPlayerY, PLAYER_SIZE, PLAYER_SIZE);
+
+      if (gdGameOver) {
+        gdCtx.fillStyle = 'rgba(0,0,0,0.75)';
+        gdCtx.fillRect(0, 0, GD_W, GD_H);
+        gdCtx.fillStyle = '#00e5ff';
+        gdCtx.font = 'bold 32px Nunito';
+        gdCtx.textAlign = 'center';
+        gdCtx.fillText('BUM! Score: ' + gdScore, GD_W/2, GD_H/2);
+      }
+    }
+
+    function gdJump() {
+      if (gdGameOver) return;
+      if (gdPlayerY >= GROUND_Y - PLAYER_SIZE - 2) gdVy = JUMP_GD;
+    }
+
+    if (gdCanvas) {
+      gdCanvas.addEventListener('click', gdJump);
+    }
+    document.addEventListener('keydown', function(e) {
+      if (document.getElementById('gdScreen').classList.contains('active') && (e.key === ' ' || e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W')) {
+        e.preventDefault();
+        gdJump();
+      }
+    });
+
+    function gdLoop() {
+      if (document.getElementById('gdScreen').classList.contains('active')) {
+        const now = performance.now();
+        gdUpdate(now - gdLastTime);
+        gdDraw();
+        gdLastTime = now;
+      }
+      requestAnimationFrame(gdLoop);
+    }
+    requestAnimationFrame(gdLoop);
+
+    // === FRUIT NINJA ===
+    const ninjaCanvas = document.getElementById('ninjaCanvas');
+    const ninjaCtx = ninjaCanvas.getContext('2d');
+    const NINJA_W = 500, NINJA_H = 500;
+    const NINJA_FRUITS = ['🍎', '🍊', '🍋', '🍇', '🍉', '🍓', '🍑', '🍒'];
+    let ninjaItems = [];
+    let ninjaScore = 0, ninjaLives = 3;
+    let ninjaPath = [];
+    let ninjaSpawnTimer = 0;
+    let ninjaGameTime = 0;
+    let ninjaGameOver = false;
+    let ninjaSliceTrail = [];
+    let ninjaExplosions = [];
+
+    function initNinja() {
+      ninjaItems = [];
+      ninjaScore = 0;
+      ninjaLives = 3;
+      ninjaPath = [];
+      ninjaSpawnTimer = 0;
+      ninjaGameTime = 0;
+      ninjaGameOver = false;
+      ninjaSliceTrail = [];
+      ninjaExplosions = [];
+      document.getElementById('ninjaScore').textContent = 0;
+      document.getElementById('ninjaLives').textContent = 3;
+    }
+
+    function spawnNinjaItem() {
+      var bombChance = 0.12 + Math.min(0.38, ninjaGameTime / 60000);
+      const isBomb = Math.random() < bombChance;
+      ninjaItems.push({
+        x: 80 + Math.random() * (NINJA_W - 160),
+        y: NINJA_H + 30,
+        vx: (Math.random() - 0.5) * 0.8,
+        vy: -2.5 - Math.random() * 1.5,
+        emoji: isBomb ? '💣' : NINJA_FRUITS[Math.floor(Math.random() * NINJA_FRUITS.length)],
+        bomb: isBomb,
+        r: 28,
+        sliced: false
+      });
+    }
+
+    function distToSegment(px, py, x1, y1, x2, y2) {
+      const dx = x2 - x1, dy = y2 - y1;
+      const len = Math.hypot(dx, dy) || 0.001;
+      const t = Math.max(0, Math.min(1, ((px - x1) * dx + (py - y1) * dy) / (len * len)));
+      const projX = x1 + t * dx, projY = y1 + t * dy;
+      return Math.hypot(px - projX, py - projY);
+    }
+
+    function ninjaUpdate(dt) {
+      if (ninjaGameOver) return;
+      const dtNorm = dt / 16;
+      ninjaGameTime += dt;
+      ninjaSpawnTimer += dtNorm;
+      if (ninjaSpawnTimer > 22) {
+        ninjaSpawnTimer = 0;
+        spawnNinjaItem();
+      }
+      ninjaItems.forEach(it => {
+        it.x += it.vx * dtNorm;
+        it.y += it.vy * dtNorm;
+      });
+      for (let i = 0; i < ninjaPath.length - 1; i++) {
+        const a = ninjaPath[i], b = ninjaPath[i + 1];
+        ninjaItems.forEach(it => {
+          if (it.sliced) return;
+          const d = distToSegment(it.x, it.y, a.x, a.y, b.x, b.y);
+          if (d < it.r) {
+            it.sliced = true;
+            if (it.bomb) {
+              if (window.Sound && window.Sound.explosion) window.Sound.explosion();
+              ninjaExplosions.push({ x: it.x, y: it.y, progress: 0, duration: 1000 });
+              ninjaLives--;
+              document.getElementById('ninjaLives').textContent = ninjaLives;
+              if (ninjaLives <= 0) { ninjaGameOver = true; if (window.Sound && window.Sound.gameOver) window.Sound.gameOver(); }
+            } else {
+              if (window.Sound && window.Sound.collect) window.Sound.collect();
+              ninjaScore += 10;
+              document.getElementById('ninjaScore').textContent = ninjaScore;
+            }
+          }
+        });
+      }
+      ninjaItems = ninjaItems.filter(it => it.y > -50 && !it.sliced);
+      if (ninjaSliceTrail.length > 0) ninjaSliceTrail = ninjaSliceTrail.filter(p => (p.t -= dtNorm) > 0);
+      ninjaExplosions.forEach(ex => { ex.progress += dt; });
+      ninjaExplosions = ninjaExplosions.filter(ex => ex.progress < ex.duration);
+    }
+
+    function ninjaDraw() {
+      ninjaCtx.fillStyle = '#0d47a1';
+      ninjaCtx.fillRect(0, 0, NINJA_W, NINJA_H);
+      ninjaCtx.strokeStyle = 'rgba(255,152,0,0.4)';
+      ninjaCtx.lineWidth = 1;
+      for (let i = 0; i < NINJA_W; i += 40) ninjaCtx.beginPath(), ninjaCtx.moveTo(i, 0), ninjaCtx.lineTo(i, NINJA_H), ninjaCtx.stroke();
+      for (let j = 0; j < NINJA_H; j += 40) ninjaCtx.beginPath(), ninjaCtx.moveTo(0, j), ninjaCtx.lineTo(NINJA_W, j), ninjaCtx.stroke();
+      ninjaSliceTrail.forEach(p => {
+        ninjaCtx.strokeStyle = `rgba(255,235,59,${p.t})`;
+        ninjaCtx.lineWidth = 4;
+        ninjaCtx.beginPath();
+        ninjaCtx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+        ninjaCtx.stroke();
+      });
+      ninjaExplosions.forEach(ex => {
+        const t = ex.progress / ex.duration;
+        const r = 25 + t * 140;
+        const alpha = 1 - t;
+        ninjaCtx.fillStyle = `rgba(255, 100, 0, ${alpha * 0.7})`;
+        ninjaCtx.beginPath();
+        ninjaCtx.arc(ex.x, ex.y, r, 0, Math.PI * 2);
+        ninjaCtx.fill();
+        ninjaCtx.strokeStyle = `rgba(255, 200, 0, ${alpha * 0.9})`;
+        ninjaCtx.lineWidth = 4;
+        ninjaCtx.stroke();
+        ninjaCtx.fillStyle = `rgba(255, 255, 200, ${alpha * 0.5})`;
+        ninjaCtx.beginPath();
+        ninjaCtx.arc(ex.x, ex.y, r * 0.6, 0, Math.PI * 2);
+        ninjaCtx.fill();
+      });
+      ninjaItems.forEach(it => {
+        ninjaCtx.font = '42px Arial';
+        ninjaCtx.textAlign = 'center';
+        ninjaCtx.textBaseline = 'middle';
+        ninjaCtx.fillText(it.emoji, it.x, it.y);
+      });
+      if (ninjaGameOver) {
+        ninjaCtx.fillStyle = 'rgba(0,0,0,0.7)';
+        ninjaCtx.fillRect(0, 0, NINJA_W, NINJA_H);
+        ninjaCtx.fillStyle = '#ffeb3b';
+        ninjaCtx.font = 'bold 28px Nunito';
+        ninjaCtx.textAlign = 'center';
+        ninjaCtx.fillText('Konec! Score: ' + ninjaScore, NINJA_W/2, NINJA_H/2);
+      }
+    }
+
+    ninjaCanvas.addEventListener('mousedown', (e) => {
+      if (ninjaGameOver) return;
+      const rect = ninjaCanvas.getBoundingClientRect();
+      ninjaPath = [{ x: e.clientX - rect.left, y: e.clientY - rect.top }];
+    });
+    ninjaCanvas.addEventListener('mousemove', (e) => {
+      if (ninjaGameOver || ninjaPath.length === 0) return;
+      const rect = ninjaCanvas.getBoundingClientRect();
+      const x = e.clientX - rect.left, y = e.clientY - rect.top;
+      if (x >= 0 && x <= NINJA_W && y >= 0 && y <= NINJA_H) {
+        ninjaPath.push({ x, y });
+        ninjaSliceTrail.push({ x, y, t: 1 });
+        if (ninjaPath.length > 25) ninjaPath.shift();
+      }
+    });
+    ninjaCanvas.addEventListener('mouseup', () => { ninjaPath = []; });
+    ninjaCanvas.addEventListener('mouseleave', () => { ninjaPath = []; });
+    ninjaCanvas.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+      if (ninjaGameOver) return;
+      const t = e.touches[0];
+      const rect = ninjaCanvas.getBoundingClientRect();
+      ninjaPath = [{ x: t.clientX - rect.left, y: t.clientY - rect.top }];
+    });
+    ninjaCanvas.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      if (ninjaGameOver || ninjaPath.length === 0) return;
+      const t = e.touches[0];
+      const rect = ninjaCanvas.getBoundingClientRect();
+      const x = t.clientX - rect.left, y = t.clientY - rect.top;
+      if (x >= 0 && x <= NINJA_W && y >= 0 && y <= NINJA_H) {
+        ninjaPath.push({ x, y });
+        ninjaSliceTrail.push({ x, y, t: 1 });
+        if (ninjaPath.length > 25) ninjaPath.shift();
+      }
+    });
+    ninjaCanvas.addEventListener('touchend', (e) => { e.preventDefault(); ninjaPath = []; });
+
+    let ninjaLastTime = performance.now();
+    function ninjaLoop() {
+      if (document.getElementById('ninjaScreen').classList.contains('active')) {
+        const now = performance.now();
+        ninjaUpdate(now - ninjaLastTime);
+        ninjaDraw();
+        ninjaLastTime = now;
+      }
+      requestAnimationFrame(ninjaLoop);
+    }
+    requestAnimationFrame(ninjaLoop);
+
+    // === PLANTS VS ZOMBIES ===
+    const canvas = document.getElementById('pvzCanvas');
+    const ctx = canvas.getContext('2d');
+    const ROWS = 5, COLS = 9, CELL_W = 90, CELL_H = 90;
+    const LAWN_OFFSET_X = 50, LAWN_OFFSET_Y = 50;
+    let sun = 50, plants = [], zombies = [], peas = [], explosions = [], sunDrops = [];
+    let lawnMowers = [];
+    let selectedPlant = null, gameOver = false, gameWon = false, wave = 1;
+    const TOTAL_WAVES = 5;
+    let zombiesInWave = 0, zombiesSpawned = 0, lastSpawn = 0, lastSunSpawn = 0;
+    let waveTransitioning = false;
+    const PLANT_COSTS = { sunflower: 50, peashooter: 100, wallnut: 50, snowpea: 175, repeater: 200, cherrybomb: 150 };
+    const ZOMBIE_TYPES = {
+      basic:     { health: 1,   speed: 1,   color: '#5D4037', head: '#8D6E63', hat: null },
+      cone:      { health: 3.5, speed: 1,   color: '#5D4037', head: '#8D6E63', hat: ['#FFF8E1', 'cone'] },
+      bucket:    { health: 5,   speed: 0.7, color: '#78909C', head: '#8D6E63', hat: ['#546E7A', 'bucket'] },
+      runner:    { health: 0.6, speed: 1.8, color: '#4E342E', head: '#6D4C41', hat: ['bandana'] },
+      newspaper: { health: 1.2, speed: 0.8, color: '#5D4037', head: '#8D6E63', hat: ['newspaper'] },
+      polevault: { health: 1,   speed: 1.2, color: '#5D4037', head: '#8D6E63', hat: ['pole'] }
+    };
+    const PLANT_EMOJI = { sunflower: '🌻', peashooter: '🌱', wallnut: '🥜', snowpea: '❄️', repeater: '🌿', cherrybomb: '🍒' };
+    const PLANT_COLORS = { sunflower: ['#FFD54F','#F9A825'], peashooter: ['#81C784','#558B2F'], wallnut: ['#8D6E63','#5D4037'], snowpea: ['#B3E5FC','#03A9F4'], repeater: ['#A5D6A7','#388E3C'], cherrybomb: ['#E57373','#C62828'] };
+
+    function getCellAt(x, y) {
+      const col = Math.floor((x - LAWN_OFFSET_X) / CELL_W);
+      const row = Math.floor((y - LAWN_OFFSET_Y) / CELL_H);
+      if (row >= 0 && row < ROWS && col >= 0 && col < COLS) return { row, col };
+      return null;
+    }
+    function getCellCenter(row, col) {
+      return { x: LAWN_OFFSET_X + col * CELL_W + CELL_W/2, y: LAWN_OFFSET_Y + row * CELL_H + CELL_H/2 };
+    }
+    function spawnSunDrop(x, y, v = 25) { sunDrops.push({ x, y, value: v, vy: 0.3, collected: false }); }
+    function spawnZombie() {
+      const row = Math.floor(Math.random() * ROWS);
+      let typeName = 'basic';
+      const r = Math.random();
+      if (wave >= 2) {
+        if (r < 0.5) typeName = 'cone';
+        else if (r < 0.75) typeName = 'basic';
+        else if (wave >= 3 && r < 0.88) typeName = 'bucket';
+        else if (wave >= 3 && r < 0.93) typeName = 'newspaper';
+        else if (wave >= 4 && r < 0.97) typeName = 'polevault';
+        else if (wave >= 4) typeName = 'runner';
+      }
+      const type = ZOMBIE_TYPES[typeName];
+      const baseHealth = 100 + wave * 20, baseSpeed = 0.15 + wave * 0.02;
+      const z = { row, x: canvas.width - 30, type: typeName, health: baseHealth * type.health, maxHealth: baseHealth * type.health, speed: baseSpeed * type.speed, slowUntil: 0 };
+      if (typeName === 'newspaper') z.newspaperHp = baseHealth * 0.28;
+      if (typeName === 'polevault') z.usedPole = false;
+      zombies.push(z);
+      zombiesSpawned++;
+    }
+    function startWave() { zombiesInWave = 10 + wave * 6; zombiesSpawned = 0; lastSpawn = performance.now(); }
+
+    function initLawnMowers() {
+      lawnMowers = [];
+      for (let r = 0; r < ROWS; r++) lawnMowers.push({ row: r, x: LAWN_OFFSET_X - 12, active: false });
+    }
+    const MOWER_SPEED = 4.5;
+    const MOWER_TRIGGER_X = LAWN_OFFSET_X + 55;
+
+    function drawLawn() {
+      for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
+        const x = LAWN_OFFSET_X + c * CELL_W, y = LAWN_OFFSET_Y + r * CELL_H;
+        ctx.fillStyle = (r+c)%2===0 ? 'rgba(139,195,74,0.9)' : 'rgba(129,199,132,0.9)';
+        ctx.fillRect(x, y, CELL_W, CELL_H);
+        ctx.strokeStyle = 'rgba(85,139,47,0.6)';
+        ctx.strokeRect(x, y, CELL_W, CELL_H);
+      }
+      lawnMowers.forEach(m => {
+        const y = LAWN_OFFSET_Y + m.row * CELL_H + CELL_H/2;
+        if (m.active) {
+          ctx.fillStyle = '#2E7D32';
+          ctx.fillRect(m.x - 35, y - 22, 50, 28);
+          ctx.fillStyle = '#1B5E20';
+          ctx.fillRect(m.x - 32, y - 19, 44, 22);
+          ctx.fillStyle = '#FFEB3B';
+          ctx.beginPath(); ctx.arc(m.x + 15, y, 8, 0, Math.PI*2); ctx.fill();
+          ctx.strokeStyle = '#F9A825'; ctx.stroke();
+        } else {
+          ctx.fillStyle = '#388E3C';
+          ctx.fillRect(m.x - 25, y - 18, 42, 24);
+          ctx.fillStyle = '#2E7D32';
+          ctx.fillRect(m.x - 22, y - 15, 36, 18);
+          ctx.fillStyle = '#1B5E20';
+          ctx.font = 'bold 20px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+          ctx.fillText('✂', m.x, y);
+        }
+      });
+    }
+    function drawPlant(p) {
+      const { x, y } = getCellCenter(p.row, p.col);
+      const r = CELL_W/2 - 8;
+      const [fill, stroke] = PLANT_COLORS[p.type] || ['#81C784','#558B2F'];
+      ctx.fillStyle = fill;
+      ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI*2); ctx.fill();
+      ctx.strokeStyle = stroke; ctx.lineWidth = 3; ctx.stroke();
+      if (p.type === 'wallnut' && p.health !== undefined) {
+        ctx.fillStyle = '#333'; ctx.fillRect(x-25, y-45, 50, 6);
+        ctx.fillStyle = '#4CAF50'; ctx.fillRect(x-25, y-45, 50*(p.health/400), 6);
+      }
+      ctx.fillStyle = '#1b5e20'; ctx.font = '24px Arial'; ctx.textAlign = 'center';
+      ctx.fillText(PLANT_EMOJI[p.type] || '🌱', x, y+8);
+    }
+    function drawZombie(z) {
+      const y = LAWN_OFFSET_Y + z.row * CELL_H + CELL_H/2;
+      const t = ZOMBIE_TYPES[z.type] || ZOMBIE_TYPES.basic;
+      ctx.fillStyle = t.color; ctx.fillRect(z.x-25, y-30, 50, 55);
+      ctx.fillStyle = t.head; ctx.beginPath(); ctx.arc(z.x, y-35, 15, 0, Math.PI*2); ctx.fill();
+      if (t.hat) {
+        if (t.hat[0] === 'bandana') { ctx.fillStyle = '#E53935'; ctx.fillRect(z.x-18, y-42, 36, 12); }
+        else if (t.hat[0] === 'newspaper') {
+          if (z.newspaperHp > 0) {
+            ctx.fillStyle = '#FFFDE7';
+            ctx.fillRect(z.x - 35, y - 42, 28, 32);
+            ctx.strokeStyle = '#9E9E9E';
+            ctx.strokeRect(z.x - 35, y - 42, 28, 32);
+            ctx.fillStyle = '#757575';
+            for (let i = 0; i < 4; i++) ctx.fillRect(z.x - 32, y - 38 + i * 7, 22, 2);
+          }
+          if (z.angry) { ctx.fillStyle = '#C62828'; ctx.beginPath(); ctx.arc(z.x - 12, y - 38, 4, 0, Math.PI*2); ctx.arc(z.x + 12, y - 38, 4, 0, Math.PI*2); ctx.fill(); }
+        } else if (t.hat[0] === 'pole' && !z.usedPole) {
+          ctx.strokeStyle = '#5D4037';
+          ctx.lineWidth = 4;
+          ctx.beginPath();
+          ctx.moveTo(z.x + 15, y - 45);
+          ctx.lineTo(z.x + 35, y - 65);
+          ctx.stroke();
+          ctx.fillStyle = '#3E2723';
+          ctx.fillRect(z.x + 32, y - 70, 8, 12);
+        } else if (t.hat[0] !== 'pole' && t.hat[0] !== 'newspaper') {
+          ctx.fillStyle = t.hat[0];
+          if (t.hat[1] === 'cone') { ctx.beginPath(); ctx.moveTo(z.x, y-55); ctx.lineTo(z.x-12, y-38); ctx.lineTo(z.x+12, y-38); ctx.closePath(); ctx.fill(); }
+          else if (t.hat[1] === 'bucket') { ctx.fillRect(z.x-18, y-50, 36, 22); ctx.strokeStyle = '#37474F'; ctx.strokeRect(z.x-18, y-50, 36, 22); }
+        }
+      } else { ctx.fillStyle = '#4E342E'; ctx.fillRect(z.x-5, y-38, 10, 8); }
+      ctx.fillStyle = '#333'; ctx.fillRect(z.x-20, y-58, 40, 5);
+      ctx.fillStyle = '#E53935'; ctx.fillRect(z.x-20, y-58, 40*(z.health/z.maxHealth), 5);
+    }
+    function drawPea(pea) {
+      const y = LAWN_OFFSET_Y + pea.row * CELL_H + CELL_H/2 - 10;
+      ctx.fillStyle = pea.slow ? '#81D4FA' : '#8BC34A';
+      ctx.beginPath(); ctx.arc(pea.x, y, 8, 0, Math.PI*2); ctx.fill();
+      ctx.strokeStyle = pea.slow ? '#03A9F4' : '#558B2F'; ctx.stroke();
+    }
+    function drawExplosion(exp) {
+      const alpha = 1 - exp.progress/exp.maxProgress;
+      ctx.fillStyle = `rgba(255,100,0,${alpha*0.6})`;
+      ctx.beginPath(); ctx.arc(exp.x, exp.y, exp.radius*(exp.progress/exp.maxProgress), 0, Math.PI*2); ctx.fill();
+      ctx.strokeStyle = `rgba(255,200,0,${alpha})`; ctx.stroke();
+    }
+    function drawSunDrop(s) {
+      if (s.collected) return;
+      ctx.fillStyle = '#FFEB3B'; ctx.beginPath(); ctx.arc(s.x, s.y, 18, 0, Math.PI*2); ctx.fill();
+      ctx.strokeStyle = '#F9A825'; ctx.stroke();
+      ctx.fillStyle = '#F57F17'; ctx.font = 'bold 14px Arial'; ctx.textAlign = 'center'; ctx.fillText(s.value, s.x, s.y+5);
+    }
+    function draw() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawLawn();
+      plants.forEach(drawPlant);
+      peas.forEach(drawPea);
+      zombies.forEach(drawZombie);
+      sunDrops.forEach(drawSunDrop);
+      explosions.forEach(drawExplosion);
+      if (waveTransitioning) {
+        ctx.fillStyle = 'rgba(0,0,0,0.5)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = '#FFEB3B';
+        ctx.font = 'bold 36px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('Vlna ' + wave + ' přichází!', canvas.width/2, canvas.height/2 - 15);
+        ctx.font = '22px Arial';
+        ctx.fillStyle = '#fff';
+        ctx.fillText('Připrav se na další zombíky...', canvas.width/2, canvas.height/2 + 25);
+      }
+    }
+    function update(dt) {
+      if (gameOver || gameWon) return;
+      const now = performance.now();
+      if (now - lastSunSpawn > 4000) { lastSunSpawn = now; spawnSunDrop(LAWN_OFFSET_X + Math.random()*(COLS*CELL_W-40)+20, 30); }
+      plants.filter(p => p.type === 'sunflower').forEach(p => {
+        if (!p.lastSunProduced) p.lastSunProduced = now;
+        if (now - p.lastSunProduced > 8000) { const {x,y}=getCellCenter(p.row,p.col); spawnSunDrop(x,y+20,25); p.lastSunProduced = now; }
+      });
+      sunDrops.forEach(s => { if (!s.collected) s.y += s.vy * 60 * (dt/1000); });
+      const spawnInterval = wave===1 && zombiesSpawned===0 ? 5000 : Math.max(700, 2400-wave*120);
+      if (zombiesSpawned < zombiesInWave && now - lastSpawn > spawnInterval) { lastSpawn = now; spawnZombie(); }
+      if (!waveTransitioning && zombiesSpawned >= zombiesInWave && zombies.length === 0 && wave < TOTAL_WAVES) {
+        waveTransitioning = true;
+        wave++;
+        document.getElementById('waveNum').textContent = wave;
+        setTimeout(() => {
+          startWave();
+          waveTransitioning = false;
+        }, 2500);
+        return;
+      }
+      if (wave >= TOTAL_WAVES && zombies.length === 0) { gameWon = true; if (window.Sound && window.Sound.win) window.Sound.win(); document.getElementById('winOverlay').classList.add('show'); return; }
+      plants.filter(p => p.type === 'cherrybomb' && p.explodeAt).forEach(p => {
+        if (now >= p.explodeAt) {
+          const {x,y}=getCellCenter(p.row,p.col);
+          explosions.push({x,y,radius:120,progress:0,maxProgress:30});
+          zombies.filter(z => {
+            const zy = LAWN_OFFSET_Y + z.row * CELL_H + CELL_H/2;
+            return Math.hypot(x - z.x, y - zy) < 120;
+          }).forEach(z => { z.health = 0; });
+          plants = plants.filter(pl => pl !== p);
+        }
+      });
+      const shooters = ['peashooter','snowpea','repeater'];
+      plants.filter(p => shooters.includes(p.type)).forEach(p => {
+        const plantX = getCellCenter(p.row,p.col).x;
+        const zombieInRow = zombies.find(z => z.row === p.row && z.x > plantX+20);
+        const cooldown = p.type==='repeater'?900:(p.type==='snowpea'?1500:1200);
+        if (zombieInRow && (!p.shootCooldown || now-p.shootCooldown > cooldown)) {
+          const {x}=getCellCenter(p.row,p.col);
+          const count = p.type==='repeater'?2:1, dmg = p.type==='repeater'?40:20;
+          for (let i=0;i<count;i++) peas.push({row:p.row, x:x+40+i*15, damage:dmg, slow:p.type==='snowpea'});
+          p.shootCooldown = now;
+        }
+      });
+      peas.forEach(pea => pea.x += 8);
+      peas = peas.filter(pea => pea.x < canvas.width+20);
+      peas.forEach(pea => {
+        const hit = zombies.find(z => z.row===pea.row && Math.abs(pea.x-z.x)<35);
+        if (!hit) return;
+        const dmg = pea.damage;
+        if (hit.type === 'newspaper' && hit.newspaperHp != null && hit.newspaperHp > 0) {
+          hit.newspaperHp -= dmg;
+          if (hit.newspaperHp <= 0) {
+            hit.angry = true;
+            hit.health += hit.newspaperHp;
+          }
+        } else {
+          hit.health -= dmg;
+        }
+        if (pea.slow) hit.slowUntil = now + 2000;
+        pea.x = 9999;
+      });
+      peas = peas.filter(pea => pea.x < canvas.width);
+      zombies = zombies.filter(z => z.health > 0);
+      zombies.forEach(z => {
+        if (z.type === 'polevault' && !z.usedPole) {
+          const plantInPath = plants.find(p => {
+            if (p.row !== z.row) return false;
+            const { x: px } = getCellCenter(p.row, p.col);
+            return z.x > px + 30 && z.x < px + 120;
+          });
+          if (plantInPath) {
+            const { x: px } = getCellCenter(plantInPath.row, plantInPath.col);
+            z.x = px - CELL_W - 25;
+            z.usedPole = true;
+          }
+        }
+        if (z.x <= MOWER_TRIGGER_X) {
+          const m = lawnMowers[z.row];
+          if (m && !m.active) m.active = true;
+        }
+      });
+      lawnMowers.forEach(m => {
+        if (!m.active) return;
+        m.x += MOWER_SPEED * 60 * (dt/1000);
+        zombies.forEach(z => {
+          if (z.row !== m.row) return;
+          if (z.x <= m.x + 30 && z.x >= m.x - 45) z.health = 0;
+        });
+      });
+      zombies = zombies.filter(z => z.health > 0);
+      zombies.forEach(z => {
+        const speed = z.slowUntil > now ? z.speed*0.3 : z.speed;
+        const plantInWay = plants.find(p => {
+          if (p.row !== z.row) return false;
+          const {x:px}=getCellCenter(p.row,p.col);
+          return Math.abs(z.x-px)<45 && z.x>px-50;
+        });
+        if (plantInWay) {
+          plantInWay.health = (plantInWay.health||100) - 25*(dt/1000);
+          if (plantInWay.health <= 0) plants = plants.filter(pl => pl !== plantInWay);
+        } else {
+          let moveSpeed = speed;
+          if (z.type === 'newspaper' && z.angry) moveSpeed *= 2.2;
+          z.x -= moveSpeed * 60 * (dt/1000);
+          if (z.x < LAWN_OFFSET_X - 30) { gameOver = true; if (window.Sound && window.Sound.gameOver) window.Sound.gameOver(); document.getElementById('gameOverOverlay').classList.add('show'); }
+        }
+      });
+      explosions.forEach(exp => exp.progress += 2);
+      explosions = explosions.filter(exp => exp.progress < exp.maxProgress);
+    }
+    function handleClick(e) {
+      if (gameOver || gameWon) return;
+      const rect = canvas.getBoundingClientRect();
+      const x = e.clientX - rect.left, y = e.clientY - rect.top;
+      sunDrops.forEach(s => {
+        if (!s.collected && Math.hypot(x-s.x, y-s.y) < 30) { s.collected = true; sun += s.value; document.getElementById('sunCount').textContent = sun; if (window.Sound && window.Sound.collect) window.Sound.collect(); }
+      });
+      sunDrops = sunDrops.filter(s => !s.collected);
+      if (selectedPlant) {
+        const cell = getCellAt(x, y);
+        if (cell) {
+          const cost = PLANT_COSTS[selectedPlant];
+          const occupied = plants.some(p => p.row===cell.row && p.col===cell.col);
+          if (!occupied && sun >= cost) {
+            sun -= cost; document.getElementById('sunCount').textContent = sun;
+            const plant = { row: cell.row, col: cell.col, type: selectedPlant };
+            if (selectedPlant === 'wallnut') plant.health = 400;
+            else if (selectedPlant !== 'cherrybomb') plant.health = 100;
+            if (selectedPlant === 'cherrybomb') plant.explodeAt = performance.now() + 500;
+            plants.push(plant);
+            if (window.Sound && window.Sound.place) window.Sound.place();
+            if (selectedPlant === 'cherrybomb' && window.Sound && window.Sound.explosion) setTimeout(function() { window.Sound.explosion(); }, 480);
+            selectedPlant = null;
+            document.querySelectorAll('.plant-btn').forEach(b => b.classList.remove('selected'));
+          }
+        }
+      }
+    }
+    document.querySelectorAll('.plant-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const plant = btn.dataset.plant, cost = parseInt(btn.dataset.cost);
+        if (sun >= cost) {
+          selectedPlant = selectedPlant === plant ? null : plant;
+          document.querySelectorAll('.plant-btn').forEach(b => b.classList.remove('selected'));
+          if (selectedPlant) btn.classList.add('selected');
+        }
+      });
+    });
+    canvas.addEventListener('click', handleClick);
+    document.getElementById('restartBtn').addEventListener('click', initPvz);
+    document.getElementById('winRestartBtn').addEventListener('click', initPvz);
+    function initPvz() {
+      sun = 50; plants = []; zombies = []; peas = []; sunDrops = []; explosions = [];
+      initLawnMowers();
+      selectedPlant = null; gameOver = false; gameWon = false; wave = 1;
+      waveTransitioning = false;
+      document.getElementById('sunCount').textContent = sun;
+      document.getElementById('waveNum').textContent = wave;
+      document.getElementById('gameOverOverlay').classList.remove('show');
+      document.getElementById('winOverlay').classList.remove('show');
+      document.querySelectorAll('.plant-btn').forEach(b => b.classList.remove('selected'));
+      startWave();
+      var pvzAud = document.getElementById('pvzMusic');
+      if (pvzAud) { pvzAud.currentTime = 0; pvzAud.loop = true; pvzAud.play().catch(function() {}); }
+    }
+    let lastTime = performance.now();
+    function gameLoop(now) {
+      const dt = now - lastTime;
+      lastTime = now;
+      if (document.getElementById('pvzScreen').classList.contains('active')) {
+        update(dt);
+        draw();
+      }
+      requestAnimationFrame(gameLoop);
+    }
+    requestAnimationFrame(gameLoop);
+  </script>
+</body>
+</html>
